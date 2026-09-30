@@ -1,0 +1,766 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Printomo — Creative Studio</title>
+  <meta name="viewport" content="width=1440">
+  <script src="vendor/react.js"></script>
+  <script src="vendor/react-dom.js"></script>
+  <script src="vendor/support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <style>
+    #dc-root { display: flex; justify-content: center; }
+    #dc-root > .sc-host { flex: 0 0 auto; }
+    @font-face { font-family: 'Archivo'; src: url('assets/archivo.woff2') format('woff2-variations'); font-weight: 100 900; font-style: normal; font-display: swap; }
+    @font-face { font-family: 'Big Shoulders Display'; src: url('assets/bigshoulders.woff2') format('woff2-variations'); font-weight: 100 900; font-style: normal; font-display: swap; }
+
+    body { margin: 0; background: #000000; color: #000000; font-family: 'Archivo', 'Helvetica Neue', Helvetica, sans-serif; -webkit-font-smoothing: antialiased; }
+    a { color: inherit; } a:hover { color: #A84F38; }
+    button { font-family: inherit; cursor: pointer; }
+    a:focus-visible, button:focus-visible, input:focus-visible { outline: 2px solid #F2C46D; outline-offset: 3px; }
+    .nb-disp { font-family: 'Big Shoulders Display', 'Arial Narrow', sans-serif; }
+    .nb-dark a:hover { color: #F2C46D; }
+    .nb-list { margin: 0; padding: 0; list-style: none; }
+
+    .nb-grain { position: relative; }
+    .nb-hero { background-color: #000000; }
+
+    /* hero */
+    .nb-rise { animation: nb-rise 1.4s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both; }
+    @keyframes nb-rise { from { transform: translateY(160px); } to { transform: translateY(0); } }
+    .nb-word { animation: nb-word 1.2s cubic-bezier(0.16, 1, 0.3, 1) both; }
+    @keyframes nb-word { from { opacity: 0; transform: translateY(40px) scale(0.98); } to { opacity: 1; transform: none; } }
+    .nb-late { animation: nb-fade 0.8s ease-out 1.5s both; }
+    @keyframes nb-fade { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+    .nb-swap { animation: nb-fade 0.5s ease-out both; }
+
+    .nb-wins { animation: nb-boot 1.6s linear 1.2s both; filter: drop-shadow(0 0 14px rgba(242, 196, 109, 0.55)); }
+    @keyframes nb-boot { 0% { opacity: 0; } 12% { opacity: 0.9; } 18% { opacity: 0.05; } 34% { opacity: 1; } 40% { opacity: 0.3; } 56% { opacity: 1; } 100% { opacity: 1; } }
+    .nb-floor path { fill: #F2C46D; }
+    .nb-floor { opacity: 0.13; transition: opacity 0.7s ease; }
+    .nb-floor.is-lit { opacity: 1; }
+    .nb-floor.is-lit path:nth-child(3n) { animation: nb-flick 5s infinite 0.8s; }
+    .nb-floor.is-lit path:nth-child(4n+1) { animation: nb-flick 7s infinite 2.4s; }
+    .nb-floor.is-lit path:nth-child(5n+2) { fill: #F5D89A; }
+    @keyframes nb-flick { 0%, 100% { opacity: 1; } 3% { opacity: 0.35; } 5% { opacity: 1; } 7% { opacity: 0.6; } 9% { opacity: 1; } }
+
+
+    .nb-lift { width: 100%; min-height: 52px; display: flex; align-items: center; gap: 14px; padding: 6px 10px 6px 6px; background: transparent; border: 1px solid #3F3E3B; border-radius: 40px; color: #D6D2C2; font-size: 15px; font-weight: 600; text-align: left; transition: border-color 0.3s, color 0.3s; }
+    .nb-lift:hover { border-color: #8A877C; color: #F4F6E8; }
+    .nb-lift .nb-knob { width: 40px; height: 40px; flex: 0 0 40px; border-radius: 50%; border: 1.5px solid #6B6A64; display: flex; align-items: center; justify-content: center; font-family: 'Big Shoulders Display', 'Arial Narrow', sans-serif; font-weight: 800; font-size: 22px; color: #F4F6E8; transition: all 0.3s; }
+    .nb-lift.is-on { border-color: #F2C46D; color: #F4F6E8; }
+    .nb-lift.is-on .nb-knob { background: #F2C46D; border-color: #F2C46D; color: #000000; box-shadow: 0 0 18px rgba(242, 196, 109, 0.7); }
+
+    /* tapes */
+    .nb-tape-l { display: flex; width: max-content; animation: nb-left 40s linear infinite; }
+    @keyframes nb-left { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+    /* scene 1: design, typed into a selection box */
+    .nb-typed { clip-path: inset(0 100% 0 0); animation: nb-type 0.9s steps(12, end) forwards; }
+    @keyframes nb-type { to { clip-path: inset(0 0 0 0); } }
+    .nb-caret { animation: nb-blink 0.9s steps(1) infinite; }
+    @keyframes nb-blink { 50% { opacity: 0; } }
+
+    /* scene 2: merch, rolling pill */
+    .nb-track { transition: transform 0.7s cubic-bezier(0.7, 0, 0.2, 1); }
+
+    /* scene 3: signage, marquee bulbs + neon */
+    .nb-bulb { position: absolute; width: 10px; height: 10px; border-radius: 50%; background: #5A4A2E; }
+    .nb-b0 { animation: nb-chase 1.2s infinite 0s; }
+    .nb-b1 { animation: nb-chase 1.2s infinite 0.4s; }
+    .nb-b2 { animation: nb-chase 1.2s infinite 0.8s; }
+    @keyframes nb-chase { 0%, 30% { background: #F5D89A; box-shadow: 0 0 10px 2px rgba(242, 196, 109, 0.85); } 34%, 100% { background: #5A4A2E; box-shadow: none; } }
+    .nb-neon { color: #F2C46D; text-shadow: 0 0 10px rgba(242, 196, 109, 0.85), 0 0 34px rgba(242, 196, 109, 0.45); animation: nb-neon 0.9s linear both; }
+    @keyframes nb-neon { 0% { opacity: 0; } 10% { opacity: 1; } 18% { opacity: 0.1; } 30% { opacity: 1; } 36% { opacity: 0.35; } 50%, 100% { opacity: 1; } }
+
+    /* scene 4: events, ticket + camera flash */
+    .nb-slide { animation: nb-slide 0.6s cubic-bezier(0.16, 1, 0.3, 1) both; }
+    @keyframes nb-slide { from { opacity: 0; transform: translateX(60px) rotate(4deg); } to { opacity: 1; transform: none; } }
+    .nb-flash { animation: nb-flash 4.8s linear infinite; }
+    @keyframes nb-flash { 0%, 90% { opacity: 0; } 91% { opacity: 0.5; } 96%, 100% { opacity: 0; } }
+    .nb-pop { animation: nb-pop 4.8s ease-out infinite; transform-origin: center; }
+    .nb-pop2 { animation-delay: 0.12s; } .nb-pop3 { animation-delay: 0.24s; }
+    @keyframes nb-pop { 0%, 89% { opacity: 0; transform: scale(0.2) rotate(0deg); } 93% { opacity: 1; transform: scale(1.1) rotate(30deg); } 100% { opacity: 0; transform: scale(0.6) rotate(60deg); } }
+
+
+
+    /* work */
+    .nb-proof { transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s, filter 0.4s; text-decoration: none; }
+    .nb-proof:hover { transform: rotate(0deg) translateY(-10px) !important; box-shadow: 14px 14px 0 #A84F38; }
+    .nb-proof.nb-dim { opacity: 0.18; filter: grayscale(1); }
+    .nb-crop { position: absolute; width: 22px; height: 22px; border-color: #000000; border-style: solid; border-width: 0; }
+    .nb-filter { min-height: 44px; padding: 0 16px; background: transparent; border: 1px solid #55544F; border-radius: 40px; color: #D6D2C2; font-size: 14px; font-weight: 600; transition: all 0.25s; }
+    .nb-filter:hover { border-color: #B8B4A4; color: #F4F6E8; }
+    .nb-filter.is-on { background: #F2C46D; border-color: #F2C46D; color: #000000; }
+
+    /* brief */
+    .nb-chip { min-height: 48px; padding: 0 12px; display: flex; align-items: center; gap: 10px; background: transparent; border: 1.5px solid #000000; border-radius: 2px; color: #000000; font-size: 15px; font-weight: 600; text-align: left; transition: background-color 0.2s, color 0.2s; }
+    .nb-chip .nb-box { width: 16px; height: 16px; flex: 0 0 16px; border: 1.5px solid currentColor; border-radius: 1px; display: flex; align-items: center; justify-content: center; }
+    .nb-chip:hover { background: #EFE8CC; }
+    .nb-chip.is-on { background: #000000; color: #F8F4DF; }
+    .nb-chip .nb-tick { opacity: 0; }
+    .nb-chip.is-on .nb-tick { opacity: 1; }
+    .nb-seg { flex: 1 1 0; min-height: 48px; background: transparent; border: 0; border-right: 1.5px solid #000000; color: #000000; font-size: 15px; font-weight: 600; transition: background-color 0.2s, color 0.2s; }
+    .nb-seg:last-child { border-right: 0; }
+    .nb-seg:hover { background: #EFE8CC; }
+    .nb-seg.is-on { background: #A84F38; color: #F8F4DF; }
+    .nb-stamp { animation: nb-stamp 0.45s cubic-bezier(0.2, 1.6, 0.4, 1) both; }
+    @keyframes nb-stamp { from { opacity: 0; transform: rotate(-14deg) scale(2.2); } to { opacity: 0.92; transform: rotate(-14deg) scale(1); } }
+    .nb-send { transition: background-color 0.2s; }
+    .nb-send:hover { background: #A84F38; }
+
+    /* conveyor */
+    .nb-trace { animation: nb-trace 9s cubic-bezier(0.65, 0, 0.35, 1) infinite; }
+    @keyframes nb-trace { 0% { width: 0; opacity: 0; } 5% { opacity: 1; } 22% { width: 334px; } 30% { width: 334px; } 52% { width: 668px; } 60% { width: 668px; } 82% { width: 1002px; } 93% { width: 1002px; opacity: 1; } 100% { width: 1002px; opacity: 0; } }
+    .nb-dot { animation: nb-dot 9s cubic-bezier(0.65, 0, 0.35, 1) infinite; }
+    @keyframes nb-dot {
+      0% { transform: translateX(0) scale(0.42); opacity: 0; }
+      5% { opacity: 1; }
+      22% { transform: translateX(334px) scale(0.62); }
+      30% { transform: translateX(334px) scale(0.62); }
+      52% { transform: translateX(668px) scale(0.81); }
+      60% { transform: translateX(668px) scale(0.81); }
+      82% { transform: translateX(1002px) scale(1); }
+      93% { transform: translateX(1002px) scale(1); opacity: 1; }
+      100% { transform: translateX(1002px) scale(1); opacity: 0; }
+    }
+
+    /* faq */
+    .nb-q { width: 100%; min-height: 70px; display: flex; justify-content: space-between; align-items: center; gap: 24px; background: transparent; border: 0; border-top: 1.5px solid #000000; padding: 0; color: #000000; text-align: left; font-family: 'Big Shoulders Display', 'Arial Narrow', sans-serif; font-weight: 800; font-size: 28px; }
+    .nb-q:hover { color: #A84F38; }
+    .nb-q .nb-plus { transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1); }
+    .nb-q.is-open .nb-plus { transform: rotate(45deg); }
+
+    .nb-cut { background-image: url('assets/photo_building.jpg'); background-size: 130% auto; background-position: 0% 40%; -webkit-background-clip: text; background-clip: text; color: transparent; animation: nb-pan 16s ease-in-out infinite alternate; }
+    @keyframes nb-pan { to { background-position: 100% 60%; } }
+    .nb-btn { transition: background-color 0.2s, color 0.2s; }
+    .nb-dark a.nb-btn-ghost:hover { background: #F4F6E8; color: #000000; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .nb-rise, .nb-word, .nb-late, .nb-wins, .nb-tape-l, .nb-trace, .nb-dot, .nb-cut, .nb-stamp, .nb-swap, .nb-floor.is-lit path, .nb-bulb, .nb-neon, .nb-slide, .nb-flash, .nb-pop, .nb-typed, .nb-caret { animation: none !important; }
+      .nb-typed { clip-path: none; }
+      .nb-flash, .nb-pop { opacity: 0; }
+      .nb-track, .nb-proof { transition: none; }
+    }
+  </style>
+</helmet>
+
+<div style="width: 1440px; height: 7612px; overflow: hidden; background: #F8F4DF; position: relative;">
+
+  <!-- ============ HERO ============ -->
+  <section class="nb-hero nb-grain nb-dark" style="height: 1040px; position: relative; overflow: hidden; color: #F4F6E8;">
+    <header style="position: absolute; top: 0; left: 0; right: 0; height: 88px; box-sizing: border-box; padding: 0 64px; display: flex; align-items: center; justify-content: space-between; z-index: 10;">
+      <a href="index.html" aria-label="Printomo home" style="display: flex;"><img src="assets/mark_rust.svg" alt="Printomo" style="width: 50px; height: 53px; display: block;"></a>
+      <nav style="display: flex; align-items: center; gap: 34px; font-size: 15px; font-weight: 500;">
+        <a href="#c-studio" style="text-decoration: none;">Studio</a>
+        <a href="#c-studio" style="text-decoration: none;">Signage</a>
+        <a href="#c-studio" style="text-decoration: none;">Events</a>
+        <a href="work.html" style="text-decoration: none;">Work</a>
+        <a href="#c-faq" style="text-decoration: none;">FAQ</a>
+        <a href="#" style="text-decoration: none;">Journal</a>
+      </nav>
+      <a class="nb-btn" href="start.html" style="text-decoration: none; background: #A84F38; color: #F8F4DF; padding: 13px 20px; border-radius: 2px; font-weight: 600; font-size: 15px;">Start a project</a>
+    </header>
+
+    <h1 class="nb-word" style="margin: 0; position: absolute; left: 60px; top: 112px; z-index: 1;">
+      <img src="assets/wordmark.svg" alt="Printomo, a creative studio" style="width: 1320px; height: 431px; display: block;">
+    </h1>
+
+    <div class="nb-rise" style="position: absolute; left: 310px; bottom: 0; width: 820px; height: 583px; z-index: 2;">
+      <img src="assets/building.svg" alt="The Printomo building at night, painted with We create, We produce, We deliver" style="width: 820px; height: 583px; display: block;">
+      <svg class="nb-wins" viewBox="0 0 2125 1510" width="820" height="583" aria-hidden="true" style="position: absolute; left: 0; top: 0;">
+        <g class="{{floorCls.design}}"><path d="M 487 887 C 468 899, 469 899, 469 917 C 469 931, 470 932, 472 934 C 473 936, 474 936, 476 935 C 481 933, 496 922, 501 918 L 507 914 507 898 C 507 874, 507 874, 487 887"></path><path d="M 545 925 C 544 926, 539 930, 533 933 C 526 937, 520 942, 517 944 L 513 947 513 960 C 513 973, 513 974, 516 976 C 518 979, 518 979, 529 972 C 532 971, 538 967, 542 965 C 554 958, 554 958, 554 940 C 554 929, 554 927, 552 926 C 550 924, 547 924, 545 925"></path><path d="M 495 929 C 492 932, 486 936, 481 939 C 469 947, 470 945, 470 973 C 470 996, 470 998, 472 1000 C 475 1002, 478 1003, 480 1000 C 481 1000, 483 998, 485 997 C 493 993, 498 990, 503 987 L 507 984 507 957 C 507 922, 507 921, 495 929"></path><path d="M 544 970 C 542 971, 540 972, 539 973 C 538 974, 534 976, 531 978 C 528 979, 524 982, 522 982 C 521 983, 518 986, 516 987 L 513 991 513 1007 C 513 1021, 513 1023, 515 1024 C 517 1026, 519 1026, 521 1025 C 521 1024, 524 1023, 526 1022 C 556 1006, 554 1008, 554 987 C 554 975, 554 972, 552 970 C 551 967, 547 967, 544 970"></path><path d="M 499 996 C 498 996, 496 998, 494 999 C 484 1004, 477 1009, 475 1011 L 472 1013 472 1029 C 472 1043, 472 1045, 474 1046 C 476 1049, 479 1048, 482 1046 C 483 1045, 488 1042, 493 1040 C 497 1038, 502 1034, 504 1033 L 507 1030 507 1013 C 507 999, 507 997, 505 996 C 503 994, 501 994, 499 996"></path><path d="M 251 1039 C 247 1042, 241 1046, 239 1048 L 235 1052 235 1065 C 235 1077, 235 1078, 237 1080 C 239 1083, 239 1083, 251 1074 C 265 1066, 264 1066, 264 1051 C 264 1032, 263 1031, 251 1039"></path><path d="M 222 1058 C 219 1060, 216 1062, 214 1063 C 212 1064, 209 1066, 207 1068 L 203 1072 203 1085 C 203 1098, 203 1099, 205 1101 C 207 1102, 207 1102, 210 1101 C 232 1087, 231 1088, 231 1072 C 231 1061, 231 1059, 229 1058 C 227 1056, 226 1056, 222 1058"></path><path d="M 921 1071 C 912 1076, 904 1080, 903 1082 C 902 1083, 902 1089, 902 1111 C 902 1139, 902 1139, 904 1141 C 907 1144, 908 1144, 915 1140 C 918 1138, 921 1137, 922 1137 C 923 1137, 925 1136, 927 1135 C 928 1134, 931 1133, 933 1132 C 941 1130, 941 1130, 941 1096 C 940 1058, 942 1060, 921 1071"></path><path d="M 254 1078 C 252 1080, 249 1082, 247 1083 C 245 1084, 242 1087, 239 1089 L 235 1093 235 1115 C 235 1144, 235 1144, 248 1137 C 252 1134, 256 1132, 257 1132 C 257 1132, 259 1131, 261 1129 L 264 1125 264 1102 C 264 1085, 264 1078, 263 1077 C 261 1075, 258 1076, 254 1078"></path><path d="M 881 1092 C 874 1095, 868 1099, 867 1101 L 865 1103 864 1129 C 864 1164, 863 1163, 881 1154 C 883 1153, 887 1152, 888 1151 C 897 1149, 898 1147, 898 1116 C 897 1082, 898 1083, 881 1092"></path><path d="M 219 1100 C 216 1102, 211 1105, 209 1108 L 204 1112 203 1133 C 203 1153, 204 1154, 206 1156 L 208 1159 216 1154 C 221 1152, 226 1148, 228 1147 L 231 1144 231 1122 C 231 1102, 231 1100, 229 1099 C 227 1096, 225 1097, 219 1100"></path><path d="M 257 1137 C 255 1138, 253 1139, 252 1139 C 251 1140, 249 1142, 246 1143 C 244 1144, 240 1147, 238 1148 L 235 1152 235 1165 C 235 1183, 235 1184, 249 1176 C 264 1169, 264 1169, 264 1153 C 264 1137, 263 1136, 257 1137"></path><path d="M 216 1160 C 204 1167, 204 1166, 204 1181 C 204 1194, 204 1194, 207 1196 C 209 1197, 209 1197, 217 1193 C 221 1191, 226 1188, 228 1187 L 231 1184 231 1171 C 231 1159, 231 1157, 229 1156 C 227 1153, 227 1153, 216 1160"></path></g>
+        <g class="{{floorCls.produce}}"><path d="M 1304 967 C 1302 969, 1302 973, 1302 1043 C 1302 1084, 1302 1118, 1303 1119 C 1304 1123, 1308 1125, 1316 1127 C 1328 1129, 1340 1133, 1348 1135 C 1352 1136, 1356 1137, 1359 1138 C 1361 1138, 1366 1139, 1368 1140 C 1378 1143, 1384 1144, 1387 1141 L 1389 1139 1388 1065 L 1388 992 1385 988 C 1382 986, 1380 985, 1376 984 C 1373 983, 1366 982, 1362 980 C 1350 977, 1337 973, 1326 970 C 1321 969, 1314 967, 1312 966 C 1306 965, 1306 965, 1304 967"></path><path d="M 1395 993 C 1394 995, 1394 998, 1394 1069 C 1394 1133, 1394 1144, 1396 1145 C 1397 1147, 1407 1150, 1416 1152 C 1425 1154, 1438 1158, 1446 1160 C 1467 1166, 1467 1166, 1467 1147 C 1467 1139, 1467 1106, 1467 1073 L 1467 1013 1465 1011 C 1463 1009, 1461 1008, 1458 1007 C 1447 1004, 1432 1000, 1426 998 C 1422 997, 1414 995, 1410 994 C 1398 991, 1398 990, 1395 993"></path><path d="M 1583 1045 C 1581 1046, 1581 1053, 1582 1121 L 1582 1195 1584 1198 C 1587 1200, 1594 1202, 1608 1205 C 1613 1206, 1613 1209, 1613 1127 C 1613 1041, 1614 1050, 1601 1046 C 1590 1043, 1585 1042, 1583 1045"></path><path d="M 1620 1054 C 1618 1055, 1618 1056, 1618 1105 C 1618 1162, 1619 1203, 1620 1205 C 1622 1209, 1636 1214, 1640 1212 C 1644 1210, 1644 1211, 1644 1135 C 1644 1051, 1645 1059, 1632 1055 C 1623 1052, 1623 1052, 1620 1054"></path><path d="M 1711 1079 C 1709 1082, 1708 1099, 1710 1184 L 1710 1228 1713 1231 C 1716 1234, 1723 1237, 1731 1238 C 1740 1239, 1739 1245, 1738 1160 C 1737 1076, 1738 1083, 1728 1080 C 1717 1077, 1714 1077, 1711 1079"></path><path d="M 1745 1087 L 1743 1088 1743 1163 C 1744 1227, 1744 1238, 1745 1240 C 1747 1241, 1763 1247, 1767 1247 C 1772 1247, 1772 1250, 1772 1169 L 1772 1095 1769 1093 C 1768 1091, 1764 1090, 1761 1089 C 1755 1088, 1750 1086, 1748 1085 C 1748 1085, 1746 1086, 1745 1087"></path><path d="M 1870 1125 C 1868 1127, 1868 1131, 1868 1195 L 1869 1263 1871 1266 C 1874 1269, 1880 1271, 1906 1277 C 1910 1278, 1918 1280, 1924 1282 C 1938 1285, 1939 1286, 1941 1283 C 1943 1281, 1943 1277, 1943 1214 L 1943 1147 1940 1145 C 1939 1143, 1934 1141, 1930 1140 C 1913 1135, 1906 1133, 1898 1130 C 1893 1129, 1885 1127, 1881 1125 C 1873 1122, 1872 1122, 1870 1125"></path><path d="M 1305 1133 C 1303 1134, 1303 1141, 1303 1199 L 1303 1263 1306 1266 C 1309 1269, 1311 1270, 1318 1271 C 1322 1272, 1329 1274, 1333 1275 C 1344 1278, 1353 1280, 1363 1282 C 1367 1283, 1373 1284, 1376 1285 C 1383 1288, 1387 1287, 1389 1284 C 1391 1282, 1391 1277, 1390 1220 C 1389 1178, 1389 1157, 1388 1155 C 1386 1151, 1383 1149, 1376 1148 C 1373 1147, 1368 1146, 1365 1145 C 1361 1144, 1355 1142, 1352 1142 C 1348 1141, 1341 1139, 1337 1138 C 1333 1137, 1327 1136, 1324 1135 C 1309 1131, 1307 1130, 1305 1133"></path><path d="M 1949 1148 C 1947 1150, 1948 1282, 1949 1285 C 1951 1289, 1955 1290, 1984 1297 C 1988 1298, 1995 1300, 1999 1301 L 2007 1303 2010 1301 L 2012 1299 2012 1233 L 2011 1168 2009 1165 C 2007 1163, 2002 1161, 1982 1155 C 1977 1154, 1969 1151, 1964 1150 C 1954 1147, 1951 1146, 1949 1148"></path><path d="M 1396 1156 L 1394 1159 1395 1222 L 1395 1286 1399 1289 C 1400 1291, 1403 1292, 1404 1292 C 1405 1292, 1408 1293, 1411 1294 C 1414 1294, 1421 1296, 1426 1297 C 1431 1298, 1437 1300, 1440 1300 C 1442 1301, 1446 1302, 1449 1302 C 1452 1303, 1456 1304, 1458 1305 C 1462 1306, 1464 1306, 1466 1304 C 1468 1302, 1468 1299, 1468 1239 C 1468 1205, 1467 1176, 1467 1174 C 1466 1171, 1462 1169, 1455 1168 C 1452 1167, 1447 1166, 1443 1165 C 1436 1163, 1427 1161, 1416 1158 C 1411 1157, 1406 1156, 1405 1155 C 1401 1153, 1399 1154, 1396 1156"></path><path d="M 1584 1208 L 1582 1211 1583 1287 C 1583 1372, 1583 1366, 1591 1367 C 1594 1368, 1598 1369, 1602 1370 C 1606 1371, 1610 1372, 1611 1372 C 1616 1370, 1616 1372, 1615 1292 C 1614 1221, 1614 1217, 1612 1215 C 1610 1212, 1606 1210, 1598 1208 C 1594 1208, 1590 1207, 1589 1206 C 1587 1206, 1586 1207, 1584 1208"></path><path d="M 1621 1217 L 1619 1220 1619 1293 C 1620 1346, 1620 1367, 1621 1370 C 1623 1375, 1627 1377, 1636 1377 C 1647 1378, 1646 1385, 1645 1298 L 1644 1224 1642 1221 C 1640 1220, 1627 1215, 1624 1215 C 1623 1215, 1622 1216, 1621 1217"></path><path d="M 1713 1242 C 1711 1244, 1711 1248, 1711 1318 L 1712 1392 1714 1394 C 1715 1396, 1718 1397, 1721 1397 C 1723 1398, 1728 1399, 1731 1400 C 1736 1401, 1736 1401, 1738 1399 L 1741 1397 1740 1325 C 1740 1284, 1739 1252, 1739 1250 C 1737 1246, 1735 1244, 1727 1242 C 1715 1240, 1715 1240, 1713 1242"></path><path d="M 1746 1250 L 1744 1251 1744 1325 L 1745 1398 1747 1401 C 1750 1404, 1754 1406, 1761 1407 C 1767 1408, 1767 1408, 1770 1406 L 1772 1404 1772 1331 C 1772 1250, 1772 1254, 1766 1253 C 1764 1252, 1760 1251, 1757 1250 C 1750 1248, 1749 1248, 1746 1250"></path><path d="M 1871 1276 L 1869 1279 1869 1338 C 1869 1389, 1869 1398, 1870 1400 C 1872 1402, 1881 1405, 1888 1406 C 1892 1407, 1906 1410, 1925 1415 C 1946 1420, 1944 1425, 1944 1369 C 1944 1345, 1944 1318, 1943 1310 L 1943 1296 1940 1293 C 1938 1291, 1935 1290, 1933 1289 C 1931 1289, 1926 1288, 1923 1287 C 1919 1286, 1912 1284, 1908 1283 C 1900 1281, 1879 1276, 1875 1275 C 1874 1274, 1873 1275, 1871 1276"></path><path d="M 1950 1296 L 1948 1299 1948 1358 L 1949 1418 1951 1420 C 1954 1422, 1966 1425, 1997 1432 C 2001 1433, 2005 1434, 2006 1434 C 2007 1435, 2009 1434, 2010 1433 L 2013 1431 2013 1372 L 2013 1313 2010 1311 C 2009 1309, 2005 1308, 2001 1307 C 1989 1304, 1980 1301, 1971 1299 C 1966 1298, 1960 1296, 1958 1296 C 1952 1294, 1953 1294, 1950 1296"></path><path d="M 1951 1430 C 1950 1431, 1949 1433, 1949 1437 C 1949 1444, 1951 1446, 1958 1448 C 1961 1449, 1964 1449, 1965 1450 C 1966 1450, 1970 1451, 1973 1452 C 1977 1452, 1983 1454, 1987 1455 C 2010 1461, 2012 1461, 2014 1453 C 2015 1446, 2010 1440, 2002 1439 C 1998 1438, 1984 1435, 1966 1430 C 1956 1428, 1953 1427, 1951 1430"></path></g>
+        <g class="{{floorCls.deliver}}"><path d="M 543 1276 C 538 1278, 532 1281, 530 1282 C 522 1286, 522 1286, 522 1315 C 522 1339, 522 1340, 524 1343 L 527 1345 535 1342 C 550 1334, 555 1332, 556 1330 C 557 1328, 558 1320, 558 1301 C 559 1267, 559 1267, 543 1276"></path><path d="M 507 1294 C 505 1295, 502 1297, 500 1298 C 498 1298, 495 1301, 493 1303 L 489 1306 489 1358 C 489 1409, 489 1409, 491 1412 C 493 1414, 493 1414, 497 1412 C 500 1412, 503 1410, 505 1408 L 508 1405 508 1379 L 508 1354 512 1351 L 516 1348 516 1322 C 516 1296, 516 1296, 514 1294 C 511 1292, 511 1292, 507 1294"></path><path d="M 559 1352 C 556 1354, 552 1355, 550 1356 C 547 1357, 544 1359, 542 1360 C 532 1365, 524 1368, 521 1369 C 514 1372, 512 1375, 512 1390 C 512 1408, 514 1410, 524 1405 C 527 1403, 535 1400, 542 1397 C 561 1389, 567 1386, 569 1384 C 571 1380, 571 1354, 568 1352 C 566 1350, 565 1350, 559 1352"></path><path d="M 555 1396 C 550 1398, 545 1400, 544 1401 C 542 1401, 537 1404, 532 1406 C 512 1414, 512 1414, 512 1430 C 512 1441, 512 1443, 514 1445 C 517 1449, 517 1449, 527 1444 C 539 1439, 544 1437, 552 1434 C 570 1426, 570 1427, 570 1409 C 570 1390, 569 1389, 555 1396"></path><path d="M 497 1419 C 489 1424, 489 1421, 489 1465 C 489 1487, 489 1505, 489 1506 C 490 1507, 505 1507, 507 1506 C 509 1503, 508 1422, 506 1419 C 505 1416, 501 1416, 497 1419"></path><path d="M 264 1419 C 264 1420, 261 1421, 258 1423 C 254 1425, 250 1427, 248 1429 L 245 1433 245 1469 C 245 1488, 245 1505, 245 1506 C 246 1507, 250 1507, 258 1507 C 267 1507, 271 1507, 272 1506 C 272 1505, 273 1489, 274 1463 C 274 1424, 274 1422, 272 1420 C 271 1418, 266 1417, 264 1419"></path><path d="M 558 1435 C 556 1437, 551 1439, 549 1440 C 546 1441, 540 1443, 536 1445 C 510 1456, 512 1453, 512 1478 C 512 1497, 512 1498, 514 1501 L 517 1503 522 1502 C 527 1500, 536 1497, 549 1492 C 551 1491, 556 1489, 559 1488 C 562 1487, 566 1485, 567 1483 L 570 1480 570 1458 C 570 1437, 570 1436, 568 1435 C 565 1433, 564 1433, 558 1435"></path><path d="M 229 1437 C 219 1442, 219 1441, 219 1475 C 219 1497, 219 1505, 220 1506 C 222 1507, 237 1507, 239 1506 C 239 1505, 240 1491, 241 1471 C 241 1430, 242 1431, 229 1437"></path></g>
+      </svg>
+    </div>
+
+
+    <div class="nb-late" style="position: absolute; left: 64px; bottom: 60px; width: 222px; display: flex; flex-direction: column; gap: 18px; z-index: 4;">
+      <p style="margin: 0; font-size: 15px; line-height: 1.5; color: #D6D2C2;">A creative studio in Union City, NJ. We design it, make it, install it, and ship it.</p>
+      <div role="group" aria-label="Pick an arm of the studio" style="display: flex; flex-direction: column; gap: 8px;">
+        <sc-for list="{{floors}}" as="f" hint-placeholder-count="3">
+          <button type="button" class="{{f.cls}}" aria-pressed="{{f.pressed}}" onClick="{{f.pick}}">
+            <span class="nb-knob">{{f.num}}</span><span>{{f.label}}</span>
+          </button>
+        </sc-for>
+      </div>
+    </div>
+
+    <div class="nb-late" style="position: absolute; right: 64px; bottom: 60px; width: 240px; min-height: 320px; display: flex; flex-direction: column; justify-content: flex-end; z-index: 4;">
+      <sc-if value="{{isDesign}}" hint-placeholder-val="{{ false }}">
+        <div class="nb-swap" style="display: flex; flex-direction: column; gap: 12px;">
+          <span style="font-size: 13px; font-weight: 600; color: #F2C46D;">Arm 03 · the studio</span>
+          <h2 class="nb-disp" style="margin: 0; font-weight: 800; font-size: 44px; line-height: 0.95;">Brand and creative</h2>
+          <p style="margin: 0; font-size: 15px; line-height: 1.5; color: #D6D2C2;">Identity, campaigns, packaging, and illustration for brands getting ready to launch.</p>
+          <a href="shop.html" style="font-weight: 600; font-size: 15px; text-underline-offset: 4px;">Meet the studio</a>
+        </div>
+      </sc-if>
+      <sc-if value="{{isProduce}}" hint-placeholder-val="{{ true }}">
+        <div class="nb-swap" style="display: flex; flex-direction: column; gap: 12px;">
+          <span style="font-size: 13px; font-weight: 600; color: #F2C46D;">Arm 02 · the shop</span>
+          <h2 class="nb-disp" style="margin: 0; font-weight: 800; font-size: 44px; line-height: 0.95;">Merch, print, and signs</h2>
+          <p style="margin: 0; font-size: 15px; line-height: 1.5; color: #D6D2C2;">Apparel, packaging, print, and signage, made in-house or through vendors we manage ourselves.</p>
+          <a href="#c-studio" style="font-weight: 600; font-size: 15px; text-underline-offset: 4px;">See what we make</a>
+        </div>
+      </sc-if>
+      <sc-if value="{{isDeliver}}" hint-placeholder-val="{{ false }}">
+        <div class="nb-swap" style="display: flex; flex-direction: column; gap: 12px;">
+          <span style="font-size: 13px; font-weight: 600; color: #F2C46D;">Arm 01 · out the door</span>
+          <h2 class="nb-disp" style="margin: 0; font-weight: 800; font-size: 44px; line-height: 0.95;">Installs, events, and shipping</h2>
+          <p style="margin: 0; font-size: 15px; line-height: 1.5; color: #D6D2C2;">We hang the signs, build the event, and ship the kits, on your date and at your location.</p>
+          <a href="#c-studio" style="font-weight: 600; font-size: 15px; text-underline-offset: 4px;">See us on site</a>
+        </div>
+      </sc-if>
+    </div>
+  </section>
+
+  <!-- ============ BANNER ============ -->
+  <div aria-hidden="true" style="height: 92px; background: #A84F38; display: flex; align-items: center; overflow: hidden;">
+    <div class="nb-tape-l">
+      <sc-for list="{{tapeA}}" as="t" hint-placeholder-count="16">
+        <div class="nb-disp" style="display: flex; align-items: center; gap: 30px; padding-right: 30px; font-weight: 800; font-size: 40px; color: #F8F4DF; letter-spacing: 0.06em; white-space: nowrap;">
+          <span>{{t}}</span>
+          <span style="width: 12px; height: 12px; border-radius: 50%; background: #F8F4DF; flex: 0 0 12px;"></span>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+
+  <!-- ============ SCENE 1: DESIGN ============ -->
+  <section id="c-studio" style="height: 420px; box-sizing: border-box; padding: 44px 64px 0; background: #F8F4DF; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 24px; align-items: start;">
+    <h2 class="nb-disp" style="grid-column: span 9; margin: 0; font-weight: 900; font-size: 100px; line-height: 0.9;">
+      <span style="display: block;">We design the</span>
+      <span style="display: flex; align-items: center; margin: 12px 0;">
+        <span style="position: relative; display: inline-flex; align-items: center; height: 110px; padding: 0 16px; border: 2px solid #A84F38;">
+          <span style="position: absolute; left: -2px; top: -26px; background: #A84F38; color: #F8F4DF; font-family: 'Archivo', sans-serif; font-weight: 600; font-size: 12px; padding: 3px 8px;">Frame 1</span>
+          <span style="position: absolute; left: -7px; top: -7px; width: 10px; height: 10px; background: #F8F4DF; border: 2px solid #A84F38;"></span>
+          <span style="position: absolute; right: -7px; top: -7px; width: 10px; height: 10px; background: #F8F4DF; border: 2px solid #A84F38;"></span>
+          <span style="position: absolute; left: -7px; bottom: -7px; width: 10px; height: 10px; background: #F8F4DF; border: 2px solid #A84F38;"></span>
+          <span style="position: absolute; right: -7px; bottom: -7px; width: 10px; height: 10px; background: #F8F4DF; border: 2px solid #A84F38;"></span>
+          <sc-for list="{{designWords}}" as="d" hint-placeholder-count="1">
+            <sc-if value="{{d.show}}" hint-placeholder-val="{{ true }}">
+              <span class="nb-typed" style="display: block; white-space: nowrap; color: #A84F38;">{{d.word}}</span>
+            </sc-if>
+          </sc-for>
+          <span class="nb-caret" style="display: block; width: 5px; height: 78px; background: #000000; margin-left: 6px;"></span>
+        </span>
+      </span>
+      <span style="display: block;">people remember.</span>
+    </h2>
+    <div style="grid-column: 10 / span 3; display: flex; flex-direction: column; gap: 14px; padding-top: 6px;">
+      <span class="nb-disp" style="font-size: 30px; font-weight: 800; line-height: 1; padding-bottom: 4px; border-bottom: 2px solid #000000;">Brand and creative</span>
+      <ul class="nb-list" style="display: flex; flex-direction: column; gap: 9px; font-size: 18px; line-height: 1.35; color: #55513F;">
+        <li>Brand identity</li><li>Campaign and launch creative</li><li>Packaging design</li><li>Illustration</li><li>Merch program strategy</li>
+      </ul>
+      <a href="work.html" style="font-weight: 600; font-size: 15px; text-underline-offset: 4px;">See design work</a>
+    </div>
+  </section>
+
+  <!-- ============ SCENE 2: MERCH ============ -->
+  <section style="height: 420px; box-sizing: border-box; padding: 44px 64px 0; background: #EFE8CC; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 24px; align-items: start;">
+    <div style="grid-column: span 3; display: flex; flex-direction: column; gap: 14px; padding-top: 6px;">
+      <span class="nb-disp" style="font-size: 30px; font-weight: 800; line-height: 1; padding-bottom: 4px; border-bottom: 2px solid #000000;">Merch and print</span>
+      <ul class="nb-list" style="display: flex; flex-direction: column; gap: 9px; font-size: 18px; line-height: 1.35; color: #55513F;">
+        <li>Screen printing and embroidery</li><li>Apparel and headwear</li><li>Hard goods and gifting</li><li>Custom packaging and print</li><li>Sustainable options</li>
+      </ul>
+      <a href="work.html" style="font-weight: 600; font-size: 15px; text-underline-offset: 4px;">See merch work</a>
+    </div>
+    <h2 class="nb-disp" style="grid-column: 4 / span 9; margin: 0; font-weight: 900; font-size: 100px; line-height: 0.9; text-align: right;">
+      <span style="display: block;">We make the</span>
+      <span style="display: flex; justify-content: flex-end; margin: 12px 0;">
+        <span style="display: inline-block; width: 440px; height: 110px; overflow: hidden; background: #A84F38; color: #F8F4DF; border-radius: 55px;">
+          <span class="nb-track" style="display: flex; flex-direction: column; align-items: center; transform: translateY({{merchY}}px);">
+            <sc-for list="{{merchWords}}" as="wd" hint-placeholder-count="5">
+              <span style="height: 110px; line-height: 110px; display: block;">{{wd}}</span>
+            </sc-for>
+          </span>
+        </span>
+      </span>
+      <span style="display: block;">nobody throws away.</span>
+    </h2>
+  </section>
+
+  <!-- ============ SCENE 3: SIGNAGE ============ -->
+  <section class="nb-grain nb-dark" style="height: 420px; box-sizing: border-box; padding: 44px 64px 0; background: #000000; color: #F4F6E8; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 24px; align-items: start; overflow: hidden;">
+    <h2 class="nb-disp" style="grid-column: span 9; margin: 0; font-weight: 900; font-size: 100px; line-height: 0.9;">
+      <span style="display: block;">We install the</span>
+      <span style="display: block; position: relative; width: 700px; height: 130px; margin: 6px 0 8px; background: #000000; border: 3px solid #A84F38; box-sizing: border-box;">
+        <span class="nb-bulb nb-b0" style="left: 15px; top: 5px;"></span><span class="nb-bulb nb-b1" style="left: 48px; top: 5px;"></span><span class="nb-bulb nb-b2" style="left: 81px; top: 5px;"></span><span class="nb-bulb nb-b0" style="left: 114px; top: 5px;"></span><span class="nb-bulb nb-b1" style="left: 147px; top: 5px;"></span><span class="nb-bulb nb-b2" style="left: 180px; top: 5px;"></span><span class="nb-bulb nb-b0" style="left: 213px; top: 5px;"></span><span class="nb-bulb nb-b1" style="left: 246px; top: 5px;"></span><span class="nb-bulb nb-b2" style="left: 279px; top: 5px;"></span><span class="nb-bulb nb-b0" style="left: 312px; top: 5px;"></span><span class="nb-bulb nb-b1" style="left: 345px; top: 5px;"></span><span class="nb-bulb nb-b2" style="left: 378px; top: 5px;"></span><span class="nb-bulb nb-b0" style="left: 411px; top: 5px;"></span><span class="nb-bulb nb-b1" style="left: 444px; top: 5px;"></span><span class="nb-bulb nb-b2" style="left: 477px; top: 5px;"></span><span class="nb-bulb nb-b0" style="left: 510px; top: 5px;"></span><span class="nb-bulb nb-b1" style="left: 543px; top: 5px;"></span><span class="nb-bulb nb-b2" style="left: 576px; top: 5px;"></span><span class="nb-bulb nb-b0" style="left: 609px; top: 5px;"></span><span class="nb-bulb nb-b1" style="left: 642px; top: 5px;"></span><span class="nb-bulb nb-b2" style="left: 675px; top: 5px;"></span><span class="nb-bulb nb-b0" style="left: 685px; top: 37px;"></span><span class="nb-bulb nb-b1" style="left: 685px; top: 60px;"></span><span class="nb-bulb nb-b2" style="left: 685px; top: 83px;"></span><span class="nb-bulb nb-b0" style="left: 675px; top: 115px;"></span><span class="nb-bulb nb-b1" style="left: 642px; top: 115px;"></span><span class="nb-bulb nb-b2" style="left: 609px; top: 115px;"></span><span class="nb-bulb nb-b0" style="left: 576px; top: 115px;"></span><span class="nb-bulb nb-b1" style="left: 543px; top: 115px;"></span><span class="nb-bulb nb-b2" style="left: 510px; top: 115px;"></span><span class="nb-bulb nb-b0" style="left: 477px; top: 115px;"></span><span class="nb-bulb nb-b1" style="left: 444px; top: 115px;"></span><span class="nb-bulb nb-b2" style="left: 411px; top: 115px;"></span><span class="nb-bulb nb-b0" style="left: 378px; top: 115px;"></span><span class="nb-bulb nb-b1" style="left: 345px; top: 115px;"></span><span class="nb-bulb nb-b2" style="left: 312px; top: 115px;"></span><span class="nb-bulb nb-b0" style="left: 279px; top: 115px;"></span><span class="nb-bulb nb-b1" style="left: 246px; top: 115px;"></span><span class="nb-bulb nb-b2" style="left: 213px; top: 115px;"></span><span class="nb-bulb nb-b0" style="left: 180px; top: 115px;"></span><span class="nb-bulb nb-b1" style="left: 147px; top: 115px;"></span><span class="nb-bulb nb-b2" style="left: 114px; top: 115px;"></span><span class="nb-bulb nb-b0" style="left: 81px; top: 115px;"></span><span class="nb-bulb nb-b1" style="left: 48px; top: 115px;"></span><span class="nb-bulb nb-b2" style="left: 15px; top: 115px;"></span><span class="nb-bulb nb-b0" style="left: 5px; top: 83px;"></span><span class="nb-bulb nb-b1" style="left: 5px; top: 60px;"></span><span class="nb-bulb nb-b2" style="left: 5px; top: 37px;"></span>
+        <span style="position: absolute; left: 24px; right: 24px; top: 20px; bottom: 20px; display: flex; align-items: center; justify-content: center;">
+          <sc-for list="{{signWords}}" as="d" hint-placeholder-count="1">
+            <sc-if value="{{d.show}}" hint-placeholder-val="{{ true }}">
+              <span class="nb-neon" style="display: block; white-space: nowrap; font-size: 88px; line-height: 1;">{{d.word}}</span>
+            </sc-if>
+          </sc-for>
+        </span>
+      </span>
+      <span style="display: block;">that pull people in.</span>
+    </h2>
+    <div style="grid-column: 10 / span 3; display: flex; flex-direction: column; gap: 14px; padding-top: 10px;">
+      <span class="nb-disp" style="font-size: 30px; font-weight: 800; line-height: 1; padding-bottom: 4px; border-bottom: 2px solid #6B6A64;">Signage and installs</span>
+      <ul class="nb-list" style="display: flex; flex-direction: column; gap: 9px; font-size: 18px; line-height: 1.35; color: #D6D2C2;">
+        <li>Indoor and outdoor signs</li><li>Window and wall graphics</li><li>Wayfinding</li><li>Fabrication</li><li>Installation by our crew</li>
+      </ul>
+      <a href="work.html" style="font-weight: 600; font-size: 15px; text-underline-offset: 4px;">See signage work</a>
+    </div>
+  </section>
+
+  <!-- ============ SCENE 4: EVENTS ============ -->
+  <section class="nb-grain" style="height: 420px; box-sizing: border-box; padding: 44px 64px 0; background: #A84F38; color: #F8F4DF; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 24px; align-items: start; overflow: hidden;">
+    <div aria-hidden="true" class="nb-flash" style="position: absolute; inset: 0; background: #FFFFFF; pointer-events: none; z-index: 6;"></div>
+    <div style="grid-column: span 3; display: flex; flex-direction: column; gap: 14px; padding-top: 10px; position: relative; z-index: 1;">
+      <span class="nb-disp" style="font-size: 30px; font-weight: 800; line-height: 1; padding-bottom: 4px; border-bottom: 2px solid #F8F4DF;">Event production</span>
+      <ul class="nb-list" style="display: flex; flex-direction: column; gap: 9px; font-size: 18px; line-height: 1.35; color: #F6E6DC;">
+        <li>Pop-ups and activations</li><li>Launch events</li><li>Booths and set builds</li><li>Branded event assets</li><li>On-site setup</li>
+      </ul>
+      <a href="work.html" style="font-weight: 600; font-size: 15px; text-underline-offset: 4px;">See event work</a>
+    </div>
+    <h2 class="nb-disp" style="grid-column: 4 / span 9; margin: 0; font-weight: 900; font-size: 100px; line-height: 0.9; text-align: right; position: relative; z-index: 1;">
+      <span style="display: block;">We produce the</span>
+      <span style="display: flex; justify-content: flex-end; margin: 12px 0; position: relative;">
+        <svg class="nb-pop" width="44" height="44" viewBox="0 0 24 24" aria-hidden="true" style="position: absolute; right: 610px; top: -18px;"><path d="M12 0C12.6 8 16 11.4 24 12C16 12.6 12.6 16 12 24C11.4 16 8 12.6 0 12C8 11.4 11.4 8 12 0Z" fill="#F2C46D"></path></svg>
+        <svg class="nb-pop nb-pop2" width="30" height="30" viewBox="0 0 24 24" aria-hidden="true" style="position: absolute; right: -14px; top: -20px;"><path d="M12 0C12.6 8 16 11.4 24 12C16 12.6 12.6 16 12 24C11.4 16 8 12.6 0 12C8 11.4 11.4 8 12 0Z" fill="#F8F4DF"></path></svg>
+        <svg class="nb-pop nb-pop3" width="24" height="24" viewBox="0 0 24 24" aria-hidden="true" style="position: absolute; right: 300px; bottom: -20px;"><path d="M12 0C12.6 8 16 11.4 24 12C16 12.6 12.6 16 12 24C11.4 16 8 12.6 0 12C8 11.4 11.4 8 12 0Z" fill="#F2C46D"></path></svg>
+        <span style="display: flex; width: 640px; height: 110px; background: #F8F4DF; color: #A84F38; transform: rotate(-2deg); box-shadow: 8px 8px 0 #000000;">
+          <span style="flex: 0 0 96px; border-right: 3px dashed #A84F38; display: flex; align-items: center; justify-content: center;">
+            <span style="transform: rotate(-90deg); font-size: 22px; font-weight: 800; letter-spacing: 0.1em; white-space: nowrap;">ADMIT ALL</span>
+          </span>
+          <span style="flex: 1 1 0; display: flex; align-items: center; justify-content: center; overflow: hidden; padding: 0 20px;">
+            <sc-for list="{{eventWords}}" as="d" hint-placeholder-count="1">
+              <sc-if value="{{d.show}}" hint-placeholder-val="{{ true }}">
+                <span class="nb-slide" style="display: block; white-space: nowrap; font-size: 76px; line-height: 1.12;">{{d.word}}</span>
+              </sc-if>
+            </sc-for>
+          </span>
+        </span>
+      </span>
+      <span style="display: block;">people post about.</span>
+    </h2>
+  </section>
+
+  <!-- ============ WORK ============ -->
+  <section id="c-work" class="nb-grain nb-dark" style="height: 1420px; position: relative; overflow: hidden; background: #000000; color: #F4F6E8;">
+    <div style="position: absolute; left: 64px; right: 64px; top: 96px; display: flex; justify-content: space-between; align-items: end;">
+      <h2 class="nb-disp" style="margin: 0; font-weight: 900; font-size: 96px; line-height: 0.9;">Fresh off<br>the press</h2>
+      <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 16px;">
+        <div role="group" aria-label="Filter work" style="display: flex; gap: 8px;">
+          <sc-for list="{{filters}}" as="fl" hint-placeholder-count="6">
+            <button type="button" class="{{fl.cls}}" aria-pressed="{{fl.pressed}}" onClick="{{fl.pick}}">{{fl.label}}</button>
+          </sc-for>
+        </div>
+        <a href="work.html" style="font-weight: 600; font-size: 15px; text-underline-offset: 5px;">View all work</a>
+      </div>
+    </div>
+
+    <a class="{{proofCls.a}}" href="case-study.html" style="position: absolute; left: 64px; top: 330px; width: 740px; box-sizing: border-box; padding: 32px 32px 20px; background: #F8F4DF; color: #000000; transform: rotate(-1.6deg); display: flex; flex-direction: column; gap: 16px;">
+      <span class="nb-crop" style="left: 8px; top: 8px; border-left-width: 1.5px; border-top-width: 1.5px;"></span>
+      <span class="nb-crop" style="right: 8px; top: 8px; border-right-width: 1.5px; border-top-width: 1.5px;"></span>
+      <span class="nb-crop" style="left: 8px; bottom: 8px; border-left-width: 1.5px; border-bottom-width: 1.5px;"></span>
+      <span class="nb-crop" style="right: 8px; bottom: 8px; border-right-width: 1.5px; border-bottom-width: 1.5px;"></span>
+      <img src="assets/work_7th_avant.jpg" alt="Avant Gardner and 7th Street Burger collab tee" style="width: 676px; height: 390px; object-fit: cover; display: block;">
+      <div style="display: flex; justify-content: space-between; align-items: center; gap: 16px;">
+        <div style="display: flex; flex-direction: column; gap: 4px;">
+          <span class="nb-disp" style="font-weight: 800; font-size: 32px; line-height: 1;">7th Street Burger x Avant Gardner</span>
+          <span style="font-size: 13px; color: #55513F;">Job 01 / Collab tee / Illustration and apparel</span>
+        </div>
+        <div aria-hidden="true" style="display: flex;">
+          <span style="width: 16px; height: 16px; background: #A84F38;"></span><span style="width: 16px; height: 16px; background: #000000;"></span><span style="width: 16px; height: 16px; background: #B89A66;"></span><span style="width: 16px; height: 16px; background: #F2C46D;"></span>
+        </div>
+      </div>
+    </a>
+
+    <a class="{{proofCls.b}}" href="case-study.html" style="position: absolute; left: 900px; top: 310px; width: 440px; box-sizing: border-box; padding: 24px 24px 16px; background: #F8F4DF; color: #000000; transform: rotate(2.2deg); display: flex; flex-direction: column; gap: 12px;">
+      <span class="nb-crop" style="left: 6px; top: 6px; border-left-width: 1.5px; border-top-width: 1.5px;"></span>
+      <span class="nb-crop" style="right: 6px; top: 6px; border-right-width: 1.5px; border-top-width: 1.5px;"></span>
+      <span class="nb-crop" style="left: 6px; bottom: 6px; border-left-width: 1.5px; border-bottom-width: 1.5px;"></span>
+      <span class="nb-crop" style="right: 6px; bottom: 6px; border-right-width: 1.5px; border-bottom-width: 1.5px;"></span>
+      <img src="assets/work_tacombi.jpg" alt="Tacombi illustrated brand art" style="width: 392px; height: 222px; object-fit: cover; display: block;">
+      <div style="display: flex; flex-direction: column; gap: 4px;">
+        <span class="nb-disp" style="font-weight: 800; font-size: 28px; line-height: 1;">Tacombi</span>
+        <span style="font-size: 13px; color: #55513F;">Job 02 / Brand art / Illustration</span>
+      </div>
+    </a>
+
+    <a class="{{proofCls.c}}" href="case-study.html" style="position: absolute; left: 880px; top: 680px; width: 460px; box-sizing: border-box; padding: 24px 24px 16px; background: #F8F4DF; color: #000000; transform: rotate(-2.8deg); display: flex; flex-direction: column; gap: 12px;">
+      <span class="nb-crop" style="left: 6px; top: 6px; border-left-width: 1.5px; border-top-width: 1.5px;"></span>
+      <span class="nb-crop" style="right: 6px; top: 6px; border-right-width: 1.5px; border-top-width: 1.5px;"></span>
+      <span class="nb-crop" style="left: 6px; bottom: 6px; border-left-width: 1.5px; border-bottom-width: 1.5px;"></span>
+      <span class="nb-crop" style="right: 6px; bottom: 6px; border-right-width: 1.5px; border-bottom-width: 1.5px;"></span>
+      <img src="assets/work_7th_merch.jpg" alt="7th Street Burger branded bottles, gift boxes, and luggage tags" style="width: 412px; height: 233px; object-fit: cover; display: block;">
+      <div style="display: flex; flex-direction: column; gap: 4px;">
+        <span class="nb-disp" style="font-weight: 800; font-size: 28px; line-height: 1;">7th Street Burger</span>
+        <span style="font-size: 13px; color: #55513F;">Job 03 / Merch kit / Packaging and hard goods</span>
+      </div>
+    </a>
+
+    <a class="{{proofCls.d}}" href="case-study.html" style="position: absolute; left: 90px; top: 890px; width: 380px; box-sizing: border-box; padding: 24px 24px 16px; background: #F8F4DF; color: #000000; transform: rotate(2.4deg); display: flex; flex-direction: column; gap: 12px;">
+      <span class="nb-crop" style="left: 6px; top: 6px; border-left-width: 1.5px; border-top-width: 1.5px;"></span>
+      <span class="nb-crop" style="right: 6px; top: 6px; border-right-width: 1.5px; border-top-width: 1.5px;"></span>
+      <span class="nb-crop" style="left: 6px; bottom: 6px; border-left-width: 1.5px; border-bottom-width: 1.5px;"></span>
+      <span class="nb-crop" style="right: 6px; bottom: 6px; border-right-width: 1.5px; border-bottom-width: 1.5px;"></span>
+      <div style="width: 332px; height: 190px; box-sizing: border-box; border: 1.5px dashed #A39C80; display: flex; align-items: center; justify-content: center; text-align: center; padding: 0 20px; font-size: 14px; color: #6E6852;">[Photo of a finished sign install]</div>
+      <div style="display: flex; flex-direction: column; gap: 4px;">
+        <span class="nb-disp" style="font-weight: 800; font-size: 28px; line-height: 1;">[Client]</span>
+        <span style="font-size: 13px; color: #55513F;">Job 04 / Storefront / Signage and install</span>
+      </div>
+    </a>
+
+    <a class="{{proofCls.e}}" href="case-study.html" style="position: absolute; left: 510px; top: 930px; width: 340px; box-sizing: border-box; padding: 22px 22px 14px; background: #F8F4DF; color: #000000; transform: rotate(-2deg); display: flex; flex-direction: column; gap: 12px;">
+      <span class="nb-crop" style="left: 6px; top: 6px; border-left-width: 1.5px; border-top-width: 1.5px;"></span>
+      <span class="nb-crop" style="right: 6px; top: 6px; border-right-width: 1.5px; border-top-width: 1.5px;"></span>
+      <span class="nb-crop" style="left: 6px; bottom: 6px; border-left-width: 1.5px; border-bottom-width: 1.5px;"></span>
+      <span class="nb-crop" style="right: 6px; bottom: 6px; border-right-width: 1.5px; border-bottom-width: 1.5px;"></span>
+      <div style="width: 296px; height: 170px; box-sizing: border-box; border: 1.5px dashed #A39C80; display: flex; align-items: center; justify-content: center; text-align: center; padding: 0 20px; font-size: 14px; color: #6E6852;">[Photo from an event or activation]</div>
+      <div style="display: flex; flex-direction: column; gap: 4px;">
+        <span class="nb-disp" style="font-weight: 800; font-size: 28px; line-height: 1;">[Client]</span>
+        <span style="font-size: 13px; color: #55513F;">Job 05 / Pop-up / Event production</span>
+      </div>
+    </a>
+
+    <div style="position: absolute; left: 900px; top: 1060px; width: 440px; height: 150px; box-sizing: border-box; border: 2px dashed #6B6A64; padding: 22px 26px; display: flex; justify-content: space-between; align-items: center; gap: 20px; transform: rotate(0.8deg);">
+      <div style="display: flex; flex-direction: column; gap: 4px;">
+        <span style="font-size: 13px; color: #B8B4A4;">Job 06</span>
+        <span class="nb-disp" style="font-weight: 800; font-size: 36px; line-height: 0.95;">Next up: yours</span>
+      </div>
+      <a class="nb-btn" href="#c-brief" style="flex: 0 0 auto; text-decoration: none; background: #F2C46D; color: #000000; padding: 14px 20px; border-radius: 2px; font-weight: 700; font-size: 15px;">Build a brief</a>
+    </div>
+
+    <div style="position: absolute; left: 64px; right: 64px; top: 1270px; display: flex; align-items: center; gap: 12px;">
+      <span style="flex: 0 0 140px; font-size: 14px; font-weight: 600; color: #B8B4A4; line-height: 1.4;">Trusted by brands like</span>
+      <div class="nb-disp" style="flex: 1 1 0; height: 80px; border: 1px solid #3F3E3B; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 24px;">7th Street Burger</div>
+      <div class="nb-disp" style="flex: 1 1 0; height: 80px; border: 1px solid #3F3E3B; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 24px;">Tacombi</div>
+      <div class="nb-disp" style="flex: 1 1 0; height: 80px; border: 1px solid #3F3E3B; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 24px;">Avant Gardner</div>
+      <div style="flex: 1 1 0; height: 80px; border: 1px dashed #55544F; display: flex; align-items: center; justify-content: center; font-size: 13px; color: #B8B4A4;">[Client logo]</div>
+      <div style="flex: 1 1 0; height: 80px; border: 1px dashed #55544F; display: flex; align-items: center; justify-content: center; font-size: 13px; color: #B8B4A4;">[Client logo]</div>
+      <div style="flex: 1 1 0; height: 80px; border: 1px dashed #55544F; display: flex; align-items: center; justify-content: center; font-size: 13px; color: #B8B4A4;">[Client logo]</div>
+    </div>
+  </section>
+
+  <!-- ============ BRIEF ============ -->
+  <section id="c-brief" class="nb-grain" style="height: 1040px; position: relative; overflow: hidden; background: #A84F38; color: #F8F4DF;">
+    <div style="position: absolute; left: 64px; top: 104px; width: 440px; display: flex; flex-direction: column; gap: 26px;">
+      <h2 class="nb-disp" style="margin: 0; font-weight: 900; font-size: 92px; line-height: 0.88;">Tell us what you’re building</h2>
+      <p style="margin: 0; font-size: 19px; line-height: 1.55;">One sign or a full launch. Tick what you need and we’ll reply with a plan, a timeline, and a quote.</p>
+      <ul class="nb-list" style="display: flex; flex-direction: column; gap: 12px; font-size: 16px; font-weight: 600;">
+        <li style="display: flex; gap: 12px; align-items: center;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#F2C46D" stroke-width="2.4" aria-hidden="true"><path d="M4 12.5l5 5L20 6.5"></path></svg>Free to send, no commitment</li>
+        <li style="display: flex; gap: 12px; align-items: center;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#F2C46D" stroke-width="2.4" aria-hidden="true"><path d="M4 12.5l5 5L20 6.5"></path></svg>One team from design to install</li>
+        <li style="display: flex; gap: 12px; align-items: center;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#F2C46D" stroke-width="2.4" aria-hidden="true"><path d="M4 12.5l5 5L20 6.5"></path></svg>Prefer to talk? <a href="tel:+13475869555" style="margin-left: 4px;">+1 (347) 586-9555</a></li>
+      </ul>
+      <img src="assets/ill_fulfillment.png" alt="" aria-hidden="true" style="width: 300px; height: 187px; object-fit: contain; margin-top: 24px; opacity: 0.9;">
+    </div>
+
+    <div style="position: absolute; left: 576px; top: 80px; width: 800px; height: 880px; box-sizing: border-box; background: #F8F4DF; color: #000000; padding: 40px 48px 36px 64px; transform: rotate(0.6deg); box-shadow: 16px 16px 0 #000000;">
+      <div aria-hidden="true" style="position: absolute; left: 22px; top: 20px; bottom: 20px; width: 0; border-left: 3px dotted #A84F38;"></div>
+      <sc-if value="{{rush}}" hint-placeholder-val="{{ false }}">
+        <div class="nb-stamp nb-disp" aria-hidden="true" style="position: absolute; right: 44px; top: 30px; padding: 4px 18px; border: 4px solid #A84F38; color: #A84F38; font-weight: 900; font-size: 46px; letter-spacing: 0.08em; transform: rotate(-14deg);">RUSH</div>
+      </sc-if>
+      <sc-if value="{{sent}}" hint-placeholder-val="{{ false }}">
+        <div class="nb-stamp nb-disp" aria-hidden="true" style="position: absolute; right: 180px; top: 380px; padding: 8px 26px; border: 6px solid #000000; color: #000000; font-weight: 900; font-size: 76px; letter-spacing: 0.08em; transform: rotate(-14deg); background: rgba(248, 244, 223, 0.7); z-index: 3;">RECEIVED</div>
+      </sc-if>
+
+      <div style="display: flex; justify-content: space-between; align-items: baseline; border-bottom: 2px solid #000000; padding-bottom: 14px;">
+        <span class="nb-disp" style="font-weight: 900; font-size: 40px;">Work order</span>
+        <span style="font-size: 14px; color: #55513F;">Printomo creative studio</span>
+      </div>
+
+      <div style="margin-top: 26px; display: flex; flex-direction: column; gap: 12px;">
+        <span style="font-size: 15px; font-weight: 700;">1. What do you need?</span>
+        <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px;">
+          <sc-for list="{{chips}}" as="c" hint-placeholder-count="8">
+            <button type="button" class="{{c.cls}}" aria-pressed="{{c.pressed}}" onClick="{{c.toggle}}">
+              <span class="nb-box"><svg class="nb-tick" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" aria-hidden="true"><path d="M4 12.5l5 5L20 6.5"></path></svg></span>
+              <span>{{c.label}}</span>
+            </button>
+          </sc-for>
+        </div>
+      </div>
+
+      <div style="margin-top: 26px; display: flex; flex-direction: column; gap: 12px;">
+        <span style="font-size: 15px; font-weight: 700;">2. What’s the budget?</span>
+        <div role="group" aria-label="Budget" style="display: flex; border: 1.5px solid #000000;">
+          <sc-for list="{{budgets}}" as="q" hint-placeholder-count="4">
+            <button type="button" class="{{q.cls}}" aria-pressed="{{q.pressed}}" onClick="{{q.pick}}">{{q.label}}</button>
+          </sc-for>
+        </div>
+      </div>
+
+      <div style="margin-top: 26px; display: flex; flex-direction: column; gap: 12px;">
+        <span style="font-size: 15px; font-weight: 700;">3. When is the deadline or event date?</span>
+        <div role="group" aria-label="Timeline" style="display: flex; border: 1.5px solid #000000;">
+          <sc-for list="{{whens}}" as="q" hint-placeholder-count="3">
+            <button type="button" class="{{q.cls}}" aria-pressed="{{q.pressed}}" onClick="{{q.pick}}">{{q.label}}</button>
+          </sc-for>
+        </div>
+      </div>
+
+      <div style="margin-top: 28px; min-height: 104px; box-sizing: border-box; background: #EFE8CC; padding: 18px 22px; display: flex; flex-direction: column; gap: 6px;">
+        <span style="font-size: 13px; font-weight: 700; color: #55513F;">Your brief</span>
+        <span aria-live="polite" class="nb-disp" style="font-weight: 700; font-size: 26px; line-height: 1.12;">{{summary}}</span>
+      </div>
+
+      <div style="margin-top: 24px; display: flex; flex-direction: column; gap: 8px;">
+        <label for="c-email" style="font-size: 15px; font-weight: 700;">4. Where should we send the quote?</label>
+        <div style="display: flex; gap: 8px;">
+          <input id="c-email" type="email" placeholder="you@brand.com" style="flex-grow: 1; height: 54px; box-sizing: border-box; padding: 0 16px; background: transparent; border: 1.5px solid #000000; border-radius: 2px; font-family: inherit; font-size: 16px; color: #000000;">
+          <button type="button" class="nb-send" onClick="{{send}}" style="height: 54px; padding: 0 28px; background: #000000; color: #F8F4DF; border: 0; border-radius: 2px; font-weight: 700; font-size: 16px;">Send my brief</button>
+        </div>
+      </div>
+
+      <div aria-hidden="true" style="position: absolute; left: 64px; right: 48px; bottom: 30px; display: flex; justify-content: space-between; align-items: flex-end;">
+        <svg width="305" height="44" viewBox="0 0 305 44"><rect x="0" y="0" width="2" height="44" fill="#000000"></rect><rect x="6" y="0" width="6" height="44" fill="#000000"></rect><rect x="14" y="0" width="3" height="44" fill="#000000"></rect><rect x="21" y="0" width="4" height="44" fill="#000000"></rect><rect x="29" y="0" width="6" height="44" fill="#000000"></rect><rect x="37" y="0" width="6" height="44" fill="#000000"></rect><rect x="45" y="0" width="4" height="44" fill="#000000"></rect><rect x="52" y="0" width="6" height="44" fill="#000000"></rect><rect x="60" y="0" width="2" height="44" fill="#000000"></rect><rect x="66" y="0" width="4" height="44" fill="#000000"></rect><rect x="74" y="0" width="6" height="44" fill="#000000"></rect><rect x="83" y="0" width="4" height="44" fill="#000000"></rect><rect x="91" y="0" width="2" height="44" fill="#000000"></rect><rect x="95" y="0" width="2" height="44" fill="#000000"></rect><rect x="101" y="0" width="4" height="44" fill="#000000"></rect><rect x="109" y="0" width="2" height="44" fill="#000000"></rect><rect x="115" y="0" width="2" height="44" fill="#000000"></rect><rect x="119" y="0" width="6" height="44" fill="#000000"></rect><rect x="127" y="0" width="3" height="44" fill="#000000"></rect><rect x="132" y="0" width="3" height="44" fill="#000000"></rect><rect x="138" y="0" width="6" height="44" fill="#000000"></rect><rect x="148" y="0" width="4" height="44" fill="#000000"></rect><rect x="156" y="0" width="4" height="44" fill="#000000"></rect><rect x="163" y="0" width="6" height="44" fill="#000000"></rect><rect x="172" y="0" width="2" height="44" fill="#000000"></rect><rect x="177" y="0" width="2" height="44" fill="#000000"></rect><rect x="181" y="0" width="2" height="44" fill="#000000"></rect><rect x="186" y="0" width="2" height="44" fill="#000000"></rect><rect x="191" y="0" width="4" height="44" fill="#000000"></rect><rect x="199" y="0" width="3" height="44" fill="#000000"></rect><rect x="205" y="0" width="6" height="44" fill="#000000"></rect><rect x="214" y="0" width="6" height="44" fill="#000000"></rect><rect x="223" y="0" width="6" height="44" fill="#000000"></rect><rect x="233" y="0" width="4" height="44" fill="#000000"></rect><rect x="241" y="0" width="2" height="44" fill="#000000"></rect><rect x="246" y="0" width="2" height="44" fill="#000000"></rect><rect x="251" y="0" width="6" height="44" fill="#000000"></rect><rect x="261" y="0" width="2" height="44" fill="#000000"></rect><rect x="267" y="0" width="3" height="44" fill="#000000"></rect><rect x="274" y="0" width="6" height="44" fill="#000000"></rect><rect x="284" y="0" width="2" height="44" fill="#000000"></rect><rect x="290" y="0" width="2" height="44" fill="#000000"></rect><rect x="296" y="0" width="6" height="44" fill="#000000"></rect></svg>
+        <span style="font-size: 12px; color: #55513F;">Design / Make / Install / Deliver</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CONVEYOR ============ -->
+  <section style="height: 500px; box-sizing: border-box; padding: 96px 64px 0; background: #F8F4DF; position: relative;">
+    <h2 class="nb-disp" style="margin: 0; font-weight: 900; font-size: 80px; line-height: 0.9;">From brief to opening day</h2>
+    <div style="position: relative; margin-top: 64px;">
+      <div aria-hidden="true" style="position: absolute; left: 20px; right: 289px; top: 20px; height: 0; border-top: 2px dashed #C9BE99;"></div>
+      <div class="nb-trace" aria-hidden="true" style="position: absolute; left: 21px; top: 19px; height: 3px; background: #A84F38; z-index: 0;"></div>
+      <div class="nb-dot" aria-hidden="true" style="position: absolute; left: -6px; top: -6px; width: 54px; height: 54px; box-sizing: border-box; border-radius: 50%; border: 3px solid #A84F38; box-shadow: 0 0 0 9px rgba(168, 79, 56, 0.10); z-index: 2;"></div>
+      <ol class="nb-list" style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); column-gap: 24px;">
+        <li style="display: flex; flex-direction: column; gap: 14px;">
+          <span class="nb-disp" style="width: 42px; height: 42px; border-radius: 50%; background: #000000; color: #F8F4DF; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 22px; position: relative; z-index: 1;">1</span>
+          <h3 class="nb-disp" style="margin: 0; font-weight: 800; font-size: 38px; line-height: 1;">Design</h3>
+          <p style="margin: 0; font-size: 16px; line-height: 1.55; color: #55513F; max-width: 290px;">Share the goal, the space, and the date. We come back with concepts, mockups, and a plan.</p>
+        </li>
+        <li style="display: flex; flex-direction: column; gap: 14px;">
+          <span class="nb-disp" style="width: 42px; height: 42px; border-radius: 50%; background: #000000; color: #F8F4DF; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 22px; position: relative; z-index: 1;">2</span>
+          <h3 class="nb-disp" style="margin: 0; font-weight: 800; font-size: 38px; line-height: 1;">Create</h3>
+          <p style="margin: 0; font-size: 16px; line-height: 1.55; color: #55513F; max-width: 290px;">We lock artwork, specs, and materials, then proof or sample before anything is made.</p>
+        </li>
+        <li style="display: flex; flex-direction: column; gap: 14px;">
+          <span class="nb-disp" style="width: 42px; height: 42px; border-radius: 50%; background: #000000; color: #F8F4DF; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 22px; position: relative; z-index: 1;">3</span>
+          <h3 class="nb-disp" style="margin: 0; font-weight: 800; font-size: 38px; line-height: 1;">Produce</h3>
+          <p style="margin: 0; font-size: 16px; line-height: 1.55; color: #55513F; max-width: 290px;">Merch, print, signs, and event builds are made in-house or by vendors we manage.</p>
+        </li>
+        <li style="display: flex; flex-direction: column; gap: 14px;">
+          <span class="nb-disp" style="width: 42px; height: 42px; border-radius: 50%; background: #A84F38; color: #F8F4DF; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 22px; position: relative; z-index: 1;">4</span>
+          <h3 class="nb-disp" style="margin: 0; font-weight: 800; font-size: 38px; line-height: 1;">Deliver</h3>
+          <p style="margin: 0; font-size: 16px; line-height: 1.55; color: #55513F; max-width: 290px;">We ship, install, and set up, on your date and at your location.</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ============ QUOTE + FAQ ============ -->
+  <section id="c-faq" style="height: 800px; box-sizing: border-box; padding: 96px 64px 0; background: #EFE8CC; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 24px; align-items: start;">
+    <figure style="grid-column: span 5; margin: 0; position: relative; background: #000000; color: #F4F6E8; padding: 56px 44px 44px; transform: rotate(-1.5deg); box-shadow: 12px 12px 0 #A84F38;">
+      <svg width="64" height="48" viewBox="0 0 64 48" aria-hidden="true" style="position: absolute; top: -24px; left: 40px;"><rect width="64" height="48" fill="#F2C46D"></rect><text x="32" y="44" text-anchor="middle" font-family="'Big Shoulders Display', 'Arial Narrow', sans-serif" font-weight="900" font-size="64" fill="#000000">“</text></svg>
+      <blockquote class="nb-disp" style="margin: 0; font-weight: 700; font-size: 40px; line-height: 1.06;">[A one- or two-sentence client quote, ideally about a project that went beyond merch, approved for the site.]</blockquote>
+      <figcaption style="margin-top: 28px; display: flex; align-items: center; gap: 14px;">
+        <span style="width: 48px; height: 48px; border-radius: 50%; border: 1.5px dashed #6B6A64; flex: 0 0 48px;"></span>
+        <span style="display: flex; flex-direction: column; gap: 2px; font-size: 15px;"><strong style="font-weight: 600;">[Name]</strong><span style="color: #B8B4A4;">[Title] at [Company]</span></span>
+      </figcaption>
+    </figure>
+
+    <div style="grid-column: 7 / span 6; display: flex; flex-direction: column;">
+      <h2 class="nb-disp" style="margin: 0 0 28px; font-weight: 900; font-size: 80px; line-height: 0.9;">Before you ask</h2>
+      <sc-for list="{{faqs}}" as="fq" hint-placeholder-count="6">
+        <div style="display: flex; flex-direction: column;">
+          <button type="button" class="{{fq.cls}}" aria-expanded="{{fq.expanded}}" onClick="{{fq.toggle}}">
+            <span>{{fq.q}}</span>
+            <svg class="nb-plus" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M12 3v18M3 12h18"></path></svg>
+          </button>
+          <sc-if value="{{fq.open}}" hint-placeholder-val="{{ false }}">
+            <p class="nb-swap" style="margin: 0 0 22px; font-size: 17px; line-height: 1.6; color: #55513F; max-width: 600px;">{{fq.a}}</p>
+          </sc-if>
+        </div>
+      </sc-for>
+      <div style="border-top: 1.5px solid #000000;"></div>
+    </div>
+  </section>
+
+  <!-- ============ CUTOUT CTA ============ -->
+  <section class="nb-grain nb-dark" style="height: 560px; box-sizing: border-box; padding: 76px 64px 0; background: #000000; color: #F4F6E8; position: relative; overflow: hidden; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 24px; align-items: start;">
+    <h2 class="nb-cut nb-disp" style="grid-column: span 8; margin: 0; font-weight: 900; font-size: 220px; line-height: 0.82; letter-spacing: -0.01em;">Let’s<br>make it.</h2>
+    <div style="grid-column: 9 / span 4; padding-top: 30px; display: flex; flex-direction: column; gap: 24px;">
+      <p style="margin: 0; font-size: 20px; line-height: 1.5; color: #D6D2C2;">Tell us what you’re launching, where, and when. The lights are on.</p>
+      <div style="display: flex; gap: 12px;">
+        <a class="nb-btn" href="start.html" style="text-decoration: none; background: #A84F38; color: #F8F4DF; padding: 16px 24px; border-radius: 2px; font-weight: 600; font-size: 16px;">Start a project</a>
+        <a class="nb-btn nb-btn-ghost" href="tel:+13475869555" style="text-decoration: none; color: #F4F6E8; padding: 15px 23px; border: 1px solid #6B6A64; border-radius: 2px; font-weight: 600; font-size: 16px;">Call the studio</a>
+      </div>
+      <a href="mailto:info@printomo.co" style="font-size: 17px;">info@printomo.co</a>
+    </div>
+  </section>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="nb-grain nb-dark" style="height: 470px; box-sizing: border-box; padding: 72px 64px 0; background: #000000; color: #F4F6E8; position: relative; overflow: hidden; border-top: 1px solid #3A3A3B;">
+    <div style="display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 24px; align-items: start;">
+      <img src="assets/mark_cream.svg" alt="Printomo" style="grid-column: span 2; width: 120px; height: 126px; display: block;">
+      <nav aria-label="Services" style="grid-column: 4 / span 2; display: flex; flex-direction: column; gap: 12px; font-size: 16px;">
+        <span style="font-weight: 600; color: #B8B4A4; font-size: 14px;">Services</span>
+        <a href="#c-studio" style="text-decoration: none;">Brand and creative</a><a href="#c-studio" style="text-decoration: none;">Merch and print</a><a href="#c-studio" style="text-decoration: none;">Signage and installs</a><a href="#c-studio" style="text-decoration: none;">Event production</a><a href="#c-studio" style="text-decoration: none;">Fulfillment</a>
+      </nav>
+      <nav aria-label="Studio" style="grid-column: span 2; display: flex; flex-direction: column; gap: 12px; font-size: 16px;">
+        <span style="font-weight: 600; color: #B8B4A4; font-size: 14px;">Studio</span>
+        <a href="work.html" style="text-decoration: none;">Work</a><a href="shop.html" style="text-decoration: none;">About</a><a href="#" style="text-decoration: none;">Journal</a><a href="#" style="text-decoration: none;">Careers</a>
+      </nav>
+      <nav aria-label="Support" style="grid-column: span 2; display: flex; flex-direction: column; gap: 12px; font-size: 16px;">
+        <span style="font-weight: 600; color: #B8B4A4; font-size: 14px;">Support</span>
+        <a href="start.html" style="text-decoration: none;">Start a project</a><a href="#c-faq" style="text-decoration: none;">FAQ</a><a href="#" style="text-decoration: none;">Artwork guidelines</a><a href="#" style="text-decoration: none;">Privacy and terms</a>
+      </nav>
+      <div style="grid-column: span 3; display: flex; flex-direction: column; gap: 12px; font-size: 16px;">
+        <span style="font-weight: 600; color: #B8B4A4; font-size: 14px;">Visit the studio</span>
+        <span style="line-height: 1.5;">308 35th Street<br>Union City, NJ 07087</span>
+        <a href="mailto:info@printomo.co" style="text-decoration: none;">info@printomo.co</a>
+        <a href="tel:+13475869555" style="text-decoration: none;">+1 (347) 586-9555</a>
+        <a href="#" aria-label="Printomo on Instagram" style="width: 44px; height: 44px; display: flex; align-items: center; margin-left: -2px;">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#F4F6E8" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.3" cy="6.7" r="0.6" fill="#F4F6E8"></circle></svg>
+        </a>
+      </div>
+    </div>
+    <div style="margin-top: 16px; border-top: 1px solid #3A3A3B; padding-top: 18px; display: flex; justify-content: space-between; font-size: 14px; color: #B8B4A4;">
+      <span>© 2026 Printomo</span>
+      <span>Lights on in Union City, NJ</span>
+    </div>
+  </footer>
+
+</div>
+</x-dc>
+<script data-dc-script data-props='{"$preview":{"width":1440,"height":7612}}'>
+class Component extends DCLogic {
+  componentDidMount() {
+    this.floorTimer = setInterval(() => {
+      const s = this.state || {};
+      if (s.pickedFloor) return;
+      this.setState({ floor: ((s.floor ?? 1) + 1) % 3 });
+    }, 3600);
+    this.wordTimer = setInterval(() => {
+      const s = this.state || {};
+      this.setState({ tick: (s.tick ?? 0) + 1 });
+    }, 2300);
+  }
+  componentWillUnmount() {
+    clearInterval(this.floorTimer);
+    clearInterval(this.wordTimer);
+  }
+  renderVals() {
+    const s = this.state || {};
+    const tick = s.tick ?? 0;
+
+    const floor = s.floor ?? 1;
+    const floorDefs = [
+      { key: 'design', num: '3', label: 'Design' },
+      { key: 'produce', num: '2', label: 'Produce' },
+      { key: 'deliver', num: '1', label: 'Deliver' }
+    ];
+    const floors = floorDefs.map((f, i) => ({
+      num: f.num, label: f.label,
+      cls: 'nb-lift' + (i === floor ? ' is-on' : ''),
+      pressed: i === floor ? 'true' : 'false',
+      pick: () => this.setState({ floor: i, pickedFloor: true })
+    }));
+    const floorCls = {};
+    floorDefs.forEach((f, i) => { floorCls[f.key] = 'nb-floor' + (i === floor ? ' is-lit' : ''); });
+
+    const rot = (list, offset) => {
+      const cur = (tick + offset) % list.length;
+      return list.map((word, i) => ({ word: word, show: i === cur }));
+    };
+    const designNames = ['BRANDS', 'CAMPAIGNS', 'LABELS', 'BOXES', 'MENUS'];
+    const designWords = rot(designNames, 0);
+    const merchList = ['TEES', 'HOODIES', 'HATS', 'TOTES', 'KITS'];
+    const merchY = -110 * ((tick + 1) % merchList.length);
+    const signWords = rot(['SIGNS', 'STOREFRONTS', 'MURALS', 'WINDOW WRAPS', 'WAYFINDING'], 2);
+    const eventWords = rot(['POP-UPS', 'LAUNCHES', 'ACTIVATIONS', 'BOOTHS', 'PARTIES'], 3);
+
+    const filterDefs = ['All', 'Design', 'Merch', 'Packaging', 'Signage', 'Events'];
+    const filter = s.filter || 'All';
+    const filters = filterDefs.map((label) => ({
+      label: label,
+      cls: 'nb-filter' + (label === filter ? ' is-on' : ''),
+      pressed: label === filter ? 'true' : 'false',
+      pick: () => this.setState({ filter: label })
+    }));
+    const tags = { a: ['Design', 'Merch'], b: ['Design'], c: ['Merch', 'Packaging'], d: ['Signage'], e: ['Events'] };
+    const proofCls = {};
+    Object.keys(tags).forEach((k) => {
+      const match = filter === 'All' || tags[k].indexOf(filter) !== -1;
+      proofCls[k] = 'nb-proof' + (match ? '' : ' nb-dim');
+    });
+
+    const needLabels = ['Brand design', 'Merch', 'Packaging', 'Print', 'Signage', 'Installation', 'Event production', 'Fulfillment'];
+    const needs = s.needs || [];
+    const chips = needLabels.map((label) => {
+      const on = needs.indexOf(label) !== -1;
+      return {
+        label: label,
+        cls: 'nb-chip' + (on ? ' is-on' : ''),
+        pressed: on ? 'true' : 'false',
+        toggle: () => {
+          const cur = (this.state && this.state.needs) || [];
+          const next = cur.indexOf(label) !== -1 ? cur.filter((x) => x !== label) : cur.concat([label]);
+          this.setState({ needs: next, sent: false });
+        }
+      };
+    });
+    const budgetLabels = ['Under $5k', '$5k to $25k', '$25k to $100k', '$100k+'];
+    const budgets = budgetLabels.map((label, i) => ({
+      label: label,
+      cls: 'nb-seg' + (s.budget === i ? ' is-on' : ''),
+      pressed: s.budget === i ? 'true' : 'false',
+      pick: () => this.setState({ budget: i, sent: false })
+    }));
+    const whenLabels = ['Within a month', '1 to 3 months', 'Just planning'];
+    const whens = whenLabels.map((label, i) => ({
+      label: label,
+      cls: 'nb-seg' + (s.when === i ? ' is-on' : ''),
+      pressed: s.when === i ? 'true' : 'false',
+      pick: () => this.setState({ when: i, sent: false })
+    }));
+    const ordered = needLabels.filter((l) => needs.indexOf(l) !== -1);
+    let summary = 'Tick at least one box above to start your brief.';
+    if (ordered.length) {
+      const what = ordered.join(', ').toLowerCase();
+      const budget = s.budget != null ? 'budget ' + budgetLabels[s.budget] : 'budget to be decided';
+      const when = s.when != null ? ['needed within a month', 'needed in 1 to 3 months', 'still in planning'][s.when] : 'timing to be decided';
+      summary = what.charAt(0).toUpperCase() + what.slice(1) + ', ' + budget + ', ' + when + '.';
+    }
+
+    const faqData = [
+      { q: 'Aren’t you a merch company?', a: 'Merch is one arm of the studio. We’re a creative studio: we design brands and campaigns, make merch, packaging, print, and signage, install it, produce events, and handle fulfillment.' },
+      { q: 'Do you install signage yourselves?', a: 'Yes. We make and install signage. [Add the areas you cover and whether you handle permits or landlord approvals.]' },
+      { q: 'Can you run an event from start to finish?', a: 'Yes. We handle the concept, branded assets, build-out, and on-site setup. [Confirm staffing and teardown.]' },
+      { q: 'Is there a minimum order?', a: '[Minimums for merch by method, and whether signage and events have a minimum budget.] Not sure where you land? Send a brief.' },
+      { q: 'How far ahead should we reach out?', a: '[Typical lead times for merch, signage, and events.] Tell us your date up front and we’ll plan backward from it.' },
+      { q: 'We don’t have designs yet. Can you help?', a: 'Yes. Our studio handles concepts, artwork, and mockups before anything is produced or installed.' }
+    ];
+    const openIdx = s.faq ?? 0;
+    const faqs = faqData.map((f, i) => ({
+      q: f.q, a: f.a,
+      open: i === openIdx,
+      expanded: i === openIdx ? 'true' : 'false',
+      cls: 'nb-q' + (i === openIdx ? ' is-open' : ''),
+      toggle: () => this.setState({ faq: ((this.state && this.state.faq) ?? 0) === i ? -1 : i })
+    }));
+
+    const a = ['DESIGN', 'CREATE', 'PRODUCE', 'DELIVER'];
+    const tapeA = [];
+    for (let i = 0; i < 8; i++) { tapeA.push(...a); }
+
+    return {
+      floors: floors, floorCls: floorCls,
+      isDesign: floor === 0, isProduce: floor === 1, isDeliver: floor === 2,
+      designWords: designWords,
+      merchWords: merchList, merchY: merchY,
+      signWords: signWords, eventWords: eventWords,
+      filters: filters, proofCls: proofCls,
+      chips: chips, budgets: budgets, whens: whens, summary: summary,
+      rush: s.when === 0 && ordered.length > 0,
+      sent: !!s.sent,
+      send: () => this.setState({ sent: ordered.length > 0 }),
+      faqs: faqs,
+      tapeA: tapeA
+    };
+  }
+}
+</script>
+</body>
+</html>
