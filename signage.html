@@ -1,0 +1,478 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Signage and installs — Printomo</title>
+  <meta name="viewport" content="width=1440">
+  <meta name="description" content="Storefront signs, window graphics, wall graphics, and wayfinding, designed, made, and installed by one studio.">
+  <link rel="icon" href="assets/mark_rust.svg" type="image/svg+xml">
+  <script src="lib/react.js"></script>
+  <script src="lib/react-dom.js"></script>
+  <script src="lib/support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <style>
+    #dc-root { display: flex; justify-content: center; }
+    #dc-root > .sc-host { flex: 0 0 auto; }
+    @font-face { font-family: 'Archivo'; src: url('assets/archivo.woff2') format('woff2-variations'); font-weight: 100 900; font-style: normal; font-display: swap; }
+    @font-face { font-family: 'Big Shoulders Display'; src: url('assets/bigshoulders.woff2') format('woff2-variations'); font-weight: 100 900; font-style: normal; font-display: swap; }
+
+    body { margin: 0; background: #000000; color: #000000; font-family: 'Archivo', 'Helvetica Neue', Helvetica, sans-serif; -webkit-font-smoothing: antialiased; }
+    a { color: inherit; } a:hover { color: #A84F38; }
+    button { font-family: inherit; cursor: pointer; }
+    a:focus-visible, button:focus-visible { outline: 2px solid #F2C46D; outline-offset: 3px; }
+    .nb-disp { font-family: 'Big Shoulders Display', 'Arial Narrow', sans-serif; }
+    .nb-dark a:hover { color: #F2C46D; }
+    .nb-list { margin: 0; padding: 0; list-style: none; }
+    .nb-btn { transition: background-color 0.2s, color 0.2s; }
+    .nb-dark a.nb-btn-ghost:hover { background: #F4F6E8; color: #000000; }
+
+    .nb-tape-l { display: flex; width: max-content; animation: nb-left 40s linear infinite; }
+    @keyframes nb-left { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+    .nb-cut { background-color: #A84F38; background-image: url('assets/photo_building.jpg'); background-size: 130% auto; background-position: 0% 40%; -webkit-background-clip: text; background-clip: text; color: transparent; animation: nb-pan 16s ease-in-out infinite alternate; }
+    @keyframes nb-pan { to { background-position: 100% 60%; } }
+
+    .nb-swap { animation: nb-fade 0.5s ease-out both; }
+    @keyframes nb-fade { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+
+    /* hero marquee */
+    .nb-bulb { position: absolute; width: 10px; height: 10px; border-radius: 50%; background: #5A4A2E; }
+    .nb-b0 { animation: nb-chase 1.2s infinite 0s; }
+    .nb-b1 { animation: nb-chase 1.2s infinite 0.4s; }
+    .nb-b2 { animation: nb-chase 1.2s infinite 0.8s; }
+    @keyframes nb-chase { 0%, 30% { background: #F5D89A; box-shadow: 0 0 10px 2px rgba(242, 196, 109, 0.85); } 34%, 100% { background: #5A4A2E; box-shadow: none; } }
+
+    /* storefront anatomy */
+    .sg-part { opacity: 0.28; transition: opacity 0.5s ease, filter 0.5s ease; }
+    .sg-part.is-on { opacity: 1; filter: drop-shadow(0 0 10px rgba(242, 196, 109, 0.9)); }
+    .sg-hot { position: absolute; width: 36px; height: 36px; margin: -18px 0 0 -18px; border-radius: 50%; border: 2px solid #000000; background: #F8F4DF; color: #000000; font-size: 13px; font-weight: 800; display: flex; align-items: center; justify-content: center; padding: 0; transition: background-color 0.25s, color 0.25s, transform 0.25s; }
+    .sg-hot:hover { transform: scale(1.12); }
+    .sg-hot.is-on { background: #A84F38; border-color: #A84F38; color: #F8F4DF; }
+    .sg-hot.is-on::after { content: ''; position: absolute; inset: -8px; border-radius: 50%; border: 2px solid #A84F38; animation: sg-ping 1.6s ease-out infinite; }
+    @keyframes sg-ping { from { transform: scale(0.7); opacity: 1; } to { transform: scale(1.5); opacity: 0; } }
+    .sg-tab { min-height: 44px; display: flex; align-items: center; gap: 10px; padding: 0 14px; background: transparent; border: 1.5px solid #000000; border-radius: 2px; color: #000000; font-size: 14px; font-weight: 600; text-align: left; transition: background-color 0.2s, color 0.2s; }
+    .sg-tab:hover { background: #EFE8CC; }
+    .sg-tab.is-on { background: #000000; color: #F8F4DF; }
+    .sg-tab .sg-n { font-family: 'Big Shoulders Display', 'Arial Narrow', sans-serif; font-weight: 800; font-size: 18px; color: #A84F38; }
+    .sg-tab.is-on .sg-n { color: #F2C46D; }
+
+    /* install process: tape measure */
+    .sg-rule { position: relative; height: 40px; border-bottom: 2px solid #6B6A64;
+      background:
+        repeating-linear-gradient(90deg, #6B6A64 0 2px, transparent 2px 16px) left bottom / 100% 12px no-repeat,
+        repeating-linear-gradient(90deg, #8A877C 0 2px, transparent 2px 80px) left bottom / 100% 26px no-repeat; }
+    .sg-fill { position: absolute; left: 0; bottom: -4px; height: 6px; width: 0; background: #F2C46D; box-shadow: 0 0 12px rgba(242, 196, 109, 0.7); animation: sg-measure 8s linear infinite; }
+    @keyframes sg-measure { 0% { width: 0; opacity: 1; } 70%, 92% { width: 100%; opacity: 1; } 100% { width: 100%; opacity: 0; } }
+    .sg-dot { position: absolute; bottom: -12px; width: 22px; height: 22px; margin-left: -1px; border-radius: 50%; background: #000000; border: 2px solid #6B6A64; }
+    .sg-d0 { animation: sg-d0 8s linear infinite; } .sg-d1 { animation: sg-d1 8s linear infinite; } .sg-d2 { animation: sg-d2 8s linear infinite; } .sg-d3 { animation: sg-d3 8s linear infinite; } .sg-d4 { animation: sg-d4 8s linear infinite; }
+    @keyframes sg-d0 { 0%, 97% { background: #F2C46D; border-color: #F2C46D; box-shadow: 0 0 14px rgba(242, 196, 109, 0.8); } 98%, 100% { background: #000000; border-color: #6B6A64; box-shadow: none; } }
+    @keyframes sg-d1 { 0%, 13.9% { background: #000000; border-color: #6B6A64; box-shadow: none; } 14%, 97% { background: #F2C46D; border-color: #F2C46D; box-shadow: 0 0 14px rgba(242, 196, 109, 0.8); } 98%, 100% { background: #000000; border-color: #6B6A64; box-shadow: none; } }
+    @keyframes sg-d2 { 0%, 27.9% { background: #000000; border-color: #6B6A64; box-shadow: none; } 28%, 97% { background: #F2C46D; border-color: #F2C46D; box-shadow: 0 0 14px rgba(242, 196, 109, 0.8); } 98%, 100% { background: #000000; border-color: #6B6A64; box-shadow: none; } }
+    @keyframes sg-d3 { 0%, 41.9% { background: #000000; border-color: #6B6A64; box-shadow: none; } 42%, 97% { background: #F2C46D; border-color: #F2C46D; box-shadow: 0 0 14px rgba(242, 196, 109, 0.8); } 98%, 100% { background: #000000; border-color: #6B6A64; box-shadow: none; } }
+    @keyframes sg-d4 { 0%, 55.9% { background: #000000; border-color: #6B6A64; box-shadow: none; } 56%, 97% { background: #F2C46D; border-color: #F2C46D; box-shadow: 0 0 14px rgba(242, 196, 109, 0.8); } 98%, 100% { background: #000000; border-color: #6B6A64; box-shadow: none; } }
+
+    /* catalogue */
+    .sg-cat { box-sizing: border-box; padding: 22px 0 0; border-top: 3px solid #000000; display: flex; flex-direction: column; gap: 10px; transition: border-color 0.3s; }
+    .sg-cat:hover { border-color: #A84F38; }
+    .sg-cat .sg-num { transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); display: inline-block; }
+    .sg-cat:hover .sg-num { transform: translateX(8px); }
+
+    /* work cards */
+    .sg-job { text-decoration: none; display: flex; flex-direction: column; gap: 14px; transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
+    .sg-job:hover { transform: translateY(-8px); }
+
+    /* faq */
+    .nb-q { width: 100%; min-height: 70px; display: flex; justify-content: space-between; align-items: center; gap: 24px; background: transparent; border: 0; border-top: 1.5px solid #000000; padding: 0; color: #000000; text-align: left; font-family: 'Big Shoulders Display', 'Arial Narrow', sans-serif; font-weight: 800; font-size: 28px; }
+    .nb-q:hover { color: #A84F38; }
+    .nb-q .nb-plus { transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1); }
+    .nb-q.is-open .nb-plus { transform: rotate(45deg); }
+
+    @media (prefers-reduced-motion: reduce) {
+      .nb-tape-l, .nb-cut, .nb-swap, .nb-bulb, .sg-hot.is-on::after, .sg-fill, .sg-dot { animation: none !important; }
+      .sg-fill { width: 100%; }
+      .sg-part, .sg-hot, .sg-job, .sg-cat .sg-num { transition: none; }
+    }
+  </style>
+</helmet>
+
+<div style="width: 1440px; height: 5360px; overflow: hidden; background: #F8F4DF; position: relative;">
+
+  <!-- ============ HERO ============ -->
+  <section class="nb-dark" style="height: 700px; box-sizing: border-box; background: #000000; color: #F4F6E8; position: relative; overflow: hidden;">
+    <header style="height: 88px; box-sizing: border-box; padding: 0 64px; display: flex; align-items: center; justify-content: space-between;">
+      <a href="index.html" aria-label="Printomo home" style="display: flex;"><img src="assets/mark_rust.svg" alt="Printomo" style="width: 50px; height: 53px; display: block;"></a>
+      <nav style="display: flex; align-items: center; gap: 34px; font-size: 15px; font-weight: 500;">
+        <a href="design.html" style="text-decoration: none;">Design</a>
+        <a href="merch.html" style="text-decoration: none;">Merch</a>
+        <a href="#" aria-current="page" style="text-decoration: none; color: #F2C46D; font-weight: 600;">Signage</a>
+        <a href="events.html" style="text-decoration: none;">Events</a>
+        <a href="work.html" style="text-decoration: none;">Work</a>
+        <a href="shop.html" style="text-decoration: none;">The shop</a>
+      </nav>
+      <a class="nb-btn" href="start.html" style="text-decoration: none; background: #A84F38; color: #F8F4DF; padding: 13px 20px; border-radius: 2px; font-weight: 600; font-size: 15px;">Start a project</a>
+    </header>
+
+    <div style="position: absolute; left: 64px; top: 140px; width: 820px; height: 240px; border: 3px solid #A84F38; box-sizing: border-box;">
+      <span class="nb-bulb nb-b0" style="left: 15px; top: 5px;"></span><span class="nb-bulb nb-b1" style="left: 48px; top: 5px;"></span><span class="nb-bulb nb-b2" style="left: 81px; top: 5px;"></span><span class="nb-bulb nb-b0" style="left: 114px; top: 5px;"></span><span class="nb-bulb nb-b1" style="left: 147px; top: 5px;"></span><span class="nb-bulb nb-b2" style="left: 180px; top: 5px;"></span><span class="nb-bulb nb-b0" style="left: 213px; top: 5px;"></span><span class="nb-bulb nb-b1" style="left: 246px; top: 5px;"></span><span class="nb-bulb nb-b2" style="left: 279px; top: 5px;"></span><span class="nb-bulb nb-b0" style="left: 312px; top: 5px;"></span><span class="nb-bulb nb-b1" style="left: 345px; top: 5px;"></span><span class="nb-bulb nb-b2" style="left: 378px; top: 5px;"></span><span class="nb-bulb nb-b0" style="left: 411px; top: 5px;"></span><span class="nb-bulb nb-b1" style="left: 444px; top: 5px;"></span><span class="nb-bulb nb-b2" style="left: 477px; top: 5px;"></span><span class="nb-bulb nb-b0" style="left: 510px; top: 5px;"></span><span class="nb-bulb nb-b1" style="left: 543px; top: 5px;"></span><span class="nb-bulb nb-b2" style="left: 576px; top: 5px;"></span><span class="nb-bulb nb-b0" style="left: 609px; top: 5px;"></span><span class="nb-bulb nb-b1" style="left: 642px; top: 5px;"></span><span class="nb-bulb nb-b2" style="left: 675px; top: 5px;"></span><span class="nb-bulb nb-b0" style="left: 708px; top: 5px;"></span><span class="nb-bulb nb-b1" style="left: 741px; top: 5px;"></span><span class="nb-bulb nb-b2" style="left: 774px; top: 5px;"></span><span class="nb-bulb nb-b0" style="left: 805px; top: 38px;"></span><span class="nb-bulb nb-b1" style="left: 805px; top: 71px;"></span><span class="nb-bulb nb-b2" style="left: 805px; top: 104px;"></span><span class="nb-bulb nb-b0" style="left: 805px; top: 137px;"></span><span class="nb-bulb nb-b1" style="left: 805px; top: 170px;"></span><span class="nb-bulb nb-b2" style="left: 774px; top: 225px;"></span><span class="nb-bulb nb-b0" style="left: 741px; top: 225px;"></span><span class="nb-bulb nb-b1" style="left: 708px; top: 225px;"></span><span class="nb-bulb nb-b2" style="left: 675px; top: 225px;"></span><span class="nb-bulb nb-b0" style="left: 642px; top: 225px;"></span><span class="nb-bulb nb-b1" style="left: 609px; top: 225px;"></span><span class="nb-bulb nb-b2" style="left: 576px; top: 225px;"></span><span class="nb-bulb nb-b0" style="left: 543px; top: 225px;"></span><span class="nb-bulb nb-b1" style="left: 510px; top: 225px;"></span><span class="nb-bulb nb-b2" style="left: 477px; top: 225px;"></span><span class="nb-bulb nb-b0" style="left: 444px; top: 225px;"></span><span class="nb-bulb nb-b1" style="left: 411px; top: 225px;"></span><span class="nb-bulb nb-b2" style="left: 378px; top: 225px;"></span><span class="nb-bulb nb-b0" style="left: 345px; top: 225px;"></span><span class="nb-bulb nb-b1" style="left: 312px; top: 225px;"></span><span class="nb-bulb nb-b2" style="left: 279px; top: 225px;"></span><span class="nb-bulb nb-b0" style="left: 246px; top: 225px;"></span><span class="nb-bulb nb-b1" style="left: 213px; top: 225px;"></span><span class="nb-bulb nb-b2" style="left: 180px; top: 225px;"></span><span class="nb-bulb nb-b0" style="left: 147px; top: 225px;"></span><span class="nb-bulb nb-b1" style="left: 114px; top: 225px;"></span><span class="nb-bulb nb-b2" style="left: 81px; top: 225px;"></span><span class="nb-bulb nb-b0" style="left: 48px; top: 225px;"></span><span class="nb-bulb nb-b1" style="left: 15px; top: 225px;"></span><span class="nb-bulb nb-b2" style="left: 5px; top: 192px;"></span><span class="nb-bulb nb-b0" style="left: 5px; top: 159px;"></span><span class="nb-bulb nb-b1" style="left: 5px; top: 126px;"></span><span class="nb-bulb nb-b2" style="left: 5px; top: 93px;"></span><span class="nb-bulb nb-b0" style="left: 5px; top: 60px;"></span>
+      <h1 class="nb-cut nb-disp" style="position: absolute; inset: 22px 30px; margin: 0; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 214px; line-height: 0.8; letter-spacing: 0.01em;">SIGNAGE</h1>
+    </div>
+    <p class="nb-disp" style="position: absolute; left: 64px; top: 414px; width: 820px; margin: 0; font-weight: 800; font-size: 60px; line-height: 0.98;">We install the signs that bring people in.</p>
+
+    <div style="position: absolute; left: 948px; top: 152px; width: 428px; display: flex; flex-direction: column; gap: 22px;">
+      <p style="margin: 0; font-size: 20px; line-height: 1.5; color: #D6D2C2;">Storefronts, windows, walls, and wayfinding. Designed in our studio, made in our shop, and hung by our own crew.</p>
+      <p style="margin: 0; font-size: 16px; line-height: 1.6; color: #B8B4A4;">One team from the first measurement to the last screw, so the sign that goes up is the one you approved.</p>
+      <div style="display: flex; gap: 12px; padding-top: 6px;">
+        <a class="nb-btn" href="start.html" style="text-decoration: none; background: #A84F38; color: #F8F4DF; padding: 16px 22px; border-radius: 2px; font-weight: 600; font-size: 16px;">Start a signage project</a>
+        <a class="nb-btn nb-btn-ghost" href="#sg-work" style="text-decoration: none; color: #F4F6E8; padding: 15px 21px; border: 1px solid #6B6A64; border-radius: 2px; font-weight: 600; font-size: 16px;">See the work</a>
+      </div>
+    </div>
+
+    <div style="position: absolute; left: 64px; right: 64px; bottom: 40px; display: flex; justify-content: space-between; align-items: end; gap: 24px; border-top: 1px solid #3A3A3B; padding-top: 22px;">
+      <span class="nb-disp" style="font-weight: 800; font-size: 30px; line-height: 1; letter-spacing: 0.08em; display: flex; align-items: center; gap: 18px;">SURVEY <span style="width: 9px; height: 9px; border-radius: 50%; background: #A84F38;"></span> DESIGN <span style="width: 9px; height: 9px; border-radius: 50%; background: #A84F38;"></span> FABRICATE <span style="width: 9px; height: 9px; border-radius: 50%; background: #A84F38;"></span> INSTALL</span>
+      <span style="font-size: 15px; color: #B8B4A4;">Installs across [your service area]</span>
+    </div>
+  </section>
+
+  <!-- ============ STOREFRONT ANATOMY ============ -->
+  <section style="height: 880px; box-sizing: border-box; padding: 88px 64px 0; background: #F8F4DF; position: relative;">
+    <div style="display: flex; justify-content: space-between; align-items: end; padding-bottom: 40px;">
+      <h2 class="nb-disp" style="margin: 0; font-weight: 900; font-size: 76px; line-height: 0.92;">Anatomy of a storefront</h2>
+      <span style="font-size: 17px; color: #55513F; max-width: 420px; text-align: right; line-height: 1.5;">Six places a sign can earn its keep. Pick one to see what goes there.</span>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 800px 1fr; column-gap: 48px; align-items: start;">
+      <div style="position: relative; width: 800px; height: 560px;">
+        <svg viewBox="0 0 800 560" width="800" height="560" role="img" aria-label="A storefront with six numbered sign locations" style="display: block;">
+          <!-- neighbours -->
+          <rect x="0" y="120" width="104" height="412" fill="#EFE8CC" stroke="#C9BE99" stroke-width="2"></rect>
+          <rect x="656" y="92" width="144" height="440" fill="#EFE8CC" stroke="#C9BE99" stroke-width="2"></rect>
+          <rect x="676" y="130" width="50" height="70" fill="none" stroke="#C9BE99" stroke-width="2"></rect><rect x="740" y="130" width="50" height="70" fill="none" stroke="#C9BE99" stroke-width="2"></rect>
+          <rect x="20" y="160" width="56" height="70" fill="none" stroke="#C9BE99" stroke-width="2"></rect>
+          <!-- facade -->
+          <rect x="120" y="58" width="520" height="474" fill="#EFE8CC" stroke="#000000" stroke-width="3"></rect>
+          <rect x="104" y="34" width="552" height="26" fill="#000000"></rect>
+          <rect x="146" y="88" width="78" height="86" fill="#000000"></rect><rect x="276" y="88" width="78" height="86" fill="#000000"></rect><rect x="406" y="88" width="78" height="86" fill="#000000"></rect><rect x="536" y="88" width="78" height="86" fill="#000000"></rect>
+          <path d="M185 88V174M315 88V174M445 88V174M575 88V174" stroke="#EFE8CC" stroke-width="3"></path>
+          <path d="M140 180H230M270 180H360M400 180H490M530 180H620" stroke="#000000" stroke-width="4"></path>
+          <!-- storefront frame + glass -->
+          <rect x="140" y="350" width="480" height="182" fill="#000000"></rect>
+          <rect x="152" y="362" width="212" height="156" fill="#D9D3B8"></rect>
+          <rect x="444" y="362" width="164" height="156" fill="#D9D3B8"></rect>
+          <rect x="376" y="362" width="56" height="170" fill="#3A3A3B"></rect>
+          <rect x="420" y="430" width="5" height="34" fill="#F8F4DF"></rect>
+          <!-- sidewalk -->
+          <rect x="0" y="532" width="800" height="28" fill="#EFE8CC"></rect>
+          <path d="M0 532H800" stroke="#000000" stroke-width="3"></path>
+          <path d="M0 550H800" stroke="#C9BE99" stroke-width="2"></path>
+
+          <!-- 01 fascia -->
+          <g class="{{partCls.fascia}}">
+            <rect x="150" y="200" width="460" height="72" fill="#000000" stroke="#000000" stroke-width="3"></rect>
+            <text x="380" y="251" text-anchor="middle" font-family="'Big Shoulders Display', 'Arial Narrow', sans-serif" font-weight="900" font-size="44" letter-spacing="5" fill="#F2C46D">YOUR NAME HERE</text>
+          </g>
+          <!-- 02 blade -->
+          <g class="{{partCls.blade}}">
+            <path d="M120 214H42M120 244L84 214M52 214V226M102 214V226" stroke="#000000" stroke-width="4" fill="none"></path>
+            <rect x="38" y="226" width="78" height="108" rx="6" fill="#A84F38" stroke="#000000" stroke-width="3"></rect>
+            <circle cx="77" cy="280" r="24" fill="none" stroke="#F8F4DF" stroke-width="3"></circle>
+            <text x="77" y="291" text-anchor="middle" font-family="'Big Shoulders Display', 'Arial Narrow', sans-serif" font-weight="900" font-size="30" fill="#F8F4DF">P</text>
+          </g>
+          <!-- 03 awning -->
+          <g class="{{partCls.awning}}">
+            <path d="M150 292L610 292L630 340a25 22 0 0 1 -50 0a25 22 0 0 1 -50 0a25 22 0 0 1 -50 0a25 22 0 0 1 -50 0a25 22 0 0 1 -50 0a25 22 0 0 1 -50 0a25 22 0 0 1 -50 0a25 22 0 0 1 -50 0a25 22 0 0 1 -50 0a25 22 0 0 1 -50 0Z" fill="#A84F38" stroke="#000000" stroke-width="3"></path>
+            <path d="M200 294L197 340M250 294L248 340M300 294L299 340M350 294L350 340M400 294L400 340M450 294L451 340M500 294L502 340M550 294L553 340" stroke="#F8F4DF" stroke-width="12" stroke-opacity="0.85"></path>
+          </g>
+          <!-- 04 window graphics -->
+          <g class="{{partCls.window}}">
+            <circle cx="258" cy="418" r="38" fill="#A84F38"></circle>
+            <text x="258" y="413" text-anchor="middle" font-family="'Big Shoulders Display', 'Arial Narrow', sans-serif" font-weight="900" font-size="20" fill="#F8F4DF">NOW</text>
+            <text x="258" y="434" text-anchor="middle" font-family="'Big Shoulders Display', 'Arial Narrow', sans-serif" font-weight="900" font-size="20" fill="#F8F4DF">OPEN</text>
+            <text x="526" y="410" text-anchor="middle" font-family="'Big Shoulders Display', 'Arial Narrow', sans-serif" font-weight="900" font-size="28" fill="#000000">COME IN,</text>
+            <text x="526" y="438" text-anchor="middle" font-family="'Big Shoulders Display', 'Arial Narrow', sans-serif" font-weight="900" font-size="28" fill="#000000">WE'RE OPEN</text>
+            <rect x="152" y="472" width="212" height="18" fill="#F8F4DF" fill-opacity="0.9"></rect>
+            <rect x="444" y="472" width="164" height="18" fill="#F8F4DF" fill-opacity="0.9"></rect>
+          </g>
+          <!-- 05 door vinyl -->
+          <g class="{{partCls.door}}">
+            <rect x="385" y="384" width="38" height="48" fill="#F8F4DF"></rect>
+            <path d="M391 394H417M391 402H417M391 410H411M391 418H417" stroke="#000000" stroke-width="3"></path>
+            <text x="404" y="510" text-anchor="middle" font-family="'Big Shoulders Display', 'Arial Narrow', sans-serif" font-weight="900" font-size="20" fill="#F2C46D">308</text>
+          </g>
+          <!-- 06 a-frame -->
+          <g class="{{partCls.aframe}}">
+            <path d="M674 534L700 428H740L766 534" fill="#000000" stroke="#000000" stroke-width="3"></path>
+            <path d="M688 520L707 442H733L752 520Z" fill="#3A3A3B"></path>
+            <text x="720" y="470" text-anchor="middle" font-family="'Big Shoulders Display', 'Arial Narrow', sans-serif" font-weight="800" font-size="15" fill="#F8F4DF">TODAY</text>
+            <path d="M704 486H736M701 498H739M698 510H742" stroke="#F8F4DF" stroke-width="2" stroke-dasharray="5 4"></path>
+          </g>
+        </svg>
+        <sc-for list="{{parts}}" as="p" hint-placeholder-count="6">
+          <button type="button" class="{{p.hotCls}}" style="{{p.pos}}" aria-label="{{p.label}}" aria-pressed="{{p.pressed}}" onClick="{{p.pick}}">{{p.num}}</button>
+        </sc-for>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 26px;">
+        <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px;">
+          <sc-for list="{{parts}}" as="p" hint-placeholder-count="6">
+            <button type="button" class="{{p.tabCls}}" aria-pressed="{{p.pressed}}" onClick="{{p.pick}}"><span class="sg-n">{{p.num}}</span>{{p.short}}</button>
+          </sc-for>
+        </div>
+        <div style="min-height: 330px;">
+          <sc-for list="{{parts}}" as="p" hint-placeholder-count="1">
+            <sc-if value="{{p.show}}" hint-placeholder-val="{{ true }}">
+              <div class="nb-swap" style="display: flex; flex-direction: column; gap: 16px; border-top: 3px solid #A84F38; padding-top: 20px;">
+                <span style="font-size: 13px; font-weight: 700; letter-spacing: 0.1em; color: #A84F38;">{{p.num}} / {{p.eyebrow}}</span>
+                <h3 class="nb-disp" style="margin: 0; font-weight: 800; font-size: 46px; line-height: 0.95;">{{p.name}}</h3>
+                <p style="margin: 0; font-size: 17px; line-height: 1.55; color: #55513F;">{{p.body}}</p>
+                <dl style="margin: 0; display: grid; grid-template-columns: 110px 1fr; font-size: 15px; border-top: 1px solid #C9BE99;">
+                  <dt style="padding: 11px 0; border-bottom: 1px solid #C9BE99; font-weight: 700;">Made as</dt><dd style="margin: 0; padding: 11px 0; border-bottom: 1px solid #C9BE99; color: #55513F;">{{p.made}}</dd>
+                  <dt style="padding: 11px 0; border-bottom: 1px solid #C9BE99; font-weight: 700;">Read from</dt><dd style="margin: 0; padding: 11px 0; border-bottom: 1px solid #C9BE99; color: #55513F;">{{p.seen}}</dd>
+                  <dt style="padding: 11px 0; border-bottom: 1px solid #C9BE99; font-weight: 700;">Permit</dt><dd style="margin: 0; padding: 11px 0; border-bottom: 1px solid #C9BE99; color: #55513F;">{{p.permit}}</dd>
+                </dl>
+              </div>
+            </sc-if>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+    <p style="position: absolute; left: 64px; bottom: 34px; margin: 0; font-size: 14px; color: #6E6852;">Permit rules vary by town. [Confirm who files: Printomo, an expediter, or the client.]</p>
+  </section>
+
+  <!-- ============ BANNER ============ -->
+  <div aria-hidden="true" style="height: 92px; background: #000000; display: flex; align-items: center; overflow: hidden;">
+    <div class="nb-tape-l">
+      <sc-for list="{{tapeA}}" as="t" hint-placeholder-count="16">
+        <div class="nb-disp" style="display: flex; align-items: center; gap: 30px; padding-right: 30px; font-weight: 800; font-size: 40px; color: #F8F4DF; letter-spacing: 0.06em; white-space: nowrap;">
+          <span>{{t}}</span>
+          <span style="width: 12px; height: 12px; border-radius: 50%; background: #A84F38; flex: 0 0 12px;"></span>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+
+  <!-- ============ CATALOGUE ============ -->
+  <section style="height: 690px; box-sizing: border-box; padding: 88px 64px 0; background: #EFE8CC;">
+    <div style="display: flex; justify-content: space-between; align-items: end; padding-bottom: 44px;">
+      <h2 class="nb-disp" style="margin: 0; font-weight: 900; font-size: 76px; line-height: 0.92;">What we make<br>and hang</h2>
+      <span style="font-size: 17px; color: #55513F; max-width: 440px; text-align: right; line-height: 1.5;">Indoor and outdoor, one sign or a whole program. If it goes on a wall, a window, or a pole, ask us.</span>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); column-gap: 24px; row-gap: 44px;">
+      <sc-for list="{{cats}}" as="c" hint-placeholder-count="8">
+        <div class="sg-cat">
+          <span class="nb-disp sg-num" style="font-weight: 900; font-size: 44px; line-height: 1; color: #A84F38;">{{c.num}}</span>
+          <h3 class="nb-disp" style="margin: 0; font-weight: 800; font-size: 30px; line-height: 1;">{{c.name}}</h3>
+          <p style="margin: 0; font-size: 15px; line-height: 1.55; color: #55513F;">{{c.body}}</p>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <!-- ============ INSTALL PROCESS ============ -->
+  <section class="nb-dark" style="height: 610px; box-sizing: border-box; padding: 88px 64px 0; background: #000000; color: #F4F6E8;">
+    <div style="display: flex; justify-content: space-between; align-items: end; padding-bottom: 56px;">
+      <h2 class="nb-disp" style="margin: 0; font-weight: 900; font-size: 76px; line-height: 0.92;">From tape measure<br>to last screw</h2>
+      <span style="font-size: 17px; color: #B8B4A4; max-width: 430px; text-align: right; line-height: 1.5;">The same team measures it, draws it, builds it, and hangs it. Nothing is lost between a sign shop and an installer.</span>
+    </div>
+    <div class="sg-rule" aria-hidden="true">
+      <span class="sg-fill"></span>
+      <span class="sg-dot sg-d0" style="left: 0%;"></span><span class="sg-dot sg-d1" style="left: 20%;"></span><span class="sg-dot sg-d2" style="left: 40%;"></span><span class="sg-dot sg-d3" style="left: 60%;"></span><span class="sg-dot sg-d4" style="left: 80%;"></span>
+    </div>
+    <ol class="nb-list" style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); padding-top: 40px;">
+      <sc-for list="{{steps}}" as="st" hint-placeholder-count="5">
+        <li style="display: flex; flex-direction: column; gap: 12px; padding-right: 30px;">
+          <span style="font-size: 13px; font-weight: 700; letter-spacing: 0.1em; color: #F2C46D;">STEP {{st.num}}</span>
+          <h3 class="nb-disp" style="margin: 0; font-weight: 800; font-size: 34px; line-height: 1;">{{st.name}}</h3>
+          <p style="margin: 0; font-size: 15px; line-height: 1.6; color: #D6D2C2;">{{st.body}}</p>
+        </li>
+      </sc-for>
+    </ol>
+  </section>
+
+  <!-- ============ WORK ============ -->
+  <section id="sg-work" style="height: 700px; box-sizing: border-box; padding: 88px 64px 0; background: #F8F4DF;">
+    <div style="display: flex; justify-content: space-between; align-items: end; padding-bottom: 40px;">
+      <h2 class="nb-disp" style="margin: 0; font-weight: 900; font-size: 76px; line-height: 0.92;">Up on the street</h2>
+      <a href="work.html" style="font-size: 15px; font-weight: 600; text-underline-offset: 5px;">See all signage work</a>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: 24px;">
+      <sc-for list="{{jobs}}" as="j" hint-placeholder-count="3">
+        <a class="sg-job" href="case-study.html">
+          <span style="width: 100%; height: 300px; box-sizing: border-box; background: #EFE8CC; border: 1.5px dashed #A39C80; display: flex; align-items: center; justify-content: center; text-align: center; padding: 0 30px; font-size: 14px; color: #6E6852;">{{j.photo}}</span>
+          <span style="font-size: 13px; font-weight: 700; letter-spacing: 0.1em; color: #A84F38;">{{j.no}}</span>
+          <span class="nb-disp" style="font-weight: 800; font-size: 32px; line-height: 1;">{{j.client}}</span>
+          <span style="font-size: 15px; color: #55513F;">{{j.piece}}</span>
+        </a>
+      </sc-for>
+    </div>
+  </section>
+
+  <!-- ============ FAQ ============ -->
+  <section style="height: 680px; box-sizing: border-box; padding: 88px 64px 0; background: #EFE8CC; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 24px; align-items: start;">
+    <div style="grid-column: span 4; display: flex; flex-direction: column; gap: 20px;">
+      <h2 class="nb-disp" style="margin: 0; font-weight: 900; font-size: 76px; line-height: 0.92;">Sign questions</h2>
+      <p style="margin: 0; font-size: 17px; line-height: 1.6; color: #55513F;">What property managers and store owners ask before they let anyone near the building.</p>
+    </div>
+    <div style="grid-column: 6 / span 7; display: flex; flex-direction: column;">
+      <sc-for list="{{faqs}}" as="fq" hint-placeholder-count="6">
+        <div style="display: flex; flex-direction: column;">
+          <button type="button" class="{{fq.cls}}" aria-expanded="{{fq.expanded}}" onClick="{{fq.toggle}}">
+            <span>{{fq.q}}</span>
+            <svg class="nb-plus" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M12 3v18M3 12h18"></path></svg>
+          </button>
+          <sc-if value="{{fq.open}}" hint-placeholder-val="{{ false }}">
+            <p class="nb-swap" style="margin: 0 0 22px; font-size: 17px; line-height: 1.6; color: #55513F; max-width: 640px;">{{fq.a}}</p>
+          </sc-if>
+        </div>
+      </sc-for>
+      <div style="border-top: 1.5px solid #000000;"></div>
+    </div>
+  </section>
+
+  <!-- ============ CTA ============ -->
+  <section class="nb-dark" style="height: 544px; box-sizing: border-box; padding: 80px 64px 0; background: #000000; color: #F4F6E8; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 24px; align-items: start;">
+    <h2 class="nb-cut nb-disp" style="grid-column: span 8; margin: 0; font-weight: 900; font-size: 196px; line-height: 0.9; letter-spacing: -0.01em;">Light it<br>up.</h2>
+    <div style="grid-column: 9 / span 4; padding-top: 30px; display: flex; flex-direction: column; gap: 24px;">
+      <p style="margin: 0; font-size: 20px; line-height: 1.5; color: #D6D2C2;">Send a few photos of the space and a rough size. We'll come back with a mockup on your actual storefront.</p>
+      <div style="display: flex; gap: 12px;">
+        <a class="nb-btn" href="start.html" style="text-decoration: none; background: #A84F38; color: #F8F4DF; padding: 16px 24px; border-radius: 2px; font-weight: 600; font-size: 16px;">Start a signage project</a>
+        <a class="nb-btn nb-btn-ghost" href="tel:+13475869555" style="text-decoration: none; color: #F4F6E8; padding: 15px 23px; border: 1px solid #6B6A64; border-radius: 2px; font-weight: 600; font-size: 16px;">Book a site survey</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="nb-dark" style="height: 464px; box-sizing: border-box; padding: 72px 64px 0; background: #000000; color: #F4F6E8; border-top: 1px solid #3A3A3B;">
+    <div style="display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 24px; align-items: start;">
+      <img src="assets/mark_cream.svg" alt="Printomo" style="grid-column: span 2; width: 120px; height: 126px; display: block;">
+      <nav aria-label="Services" style="grid-column: 4 / span 2; display: flex; flex-direction: column; gap: 12px; font-size: 16px;">
+        <span style="font-weight: 600; color: #B8B4A4; font-size: 14px;">Services</span>
+        <a href="design.html" style="text-decoration: none;">Brand and creative</a><a href="merch.html" style="text-decoration: none;">Merch and print</a><a href="#" style="text-decoration: none;">Signage and installs</a><a href="events.html" style="text-decoration: none;">Event production</a><a href="shop.html" style="text-decoration: none;">Fulfillment</a>
+      </nav>
+      <nav aria-label="Studio" style="grid-column: span 2; display: flex; flex-direction: column; gap: 12px; font-size: 16px;">
+        <span style="font-weight: 600; color: #B8B4A4; font-size: 14px;">Studio</span>
+        <a href="work.html" style="text-decoration: none;">Work</a><a href="shop.html" style="text-decoration: none;">The shop</a><a href="soon.html?p=Journal" style="text-decoration: none;">Journal</a><a href="soon.html?p=Careers" style="text-decoration: none;">Careers</a>
+      </nav>
+      <nav aria-label="Support" style="grid-column: span 2; display: flex; flex-direction: column; gap: 12px; font-size: 16px;">
+        <span style="font-weight: 600; color: #B8B4A4; font-size: 14px;">Support</span>
+        <a href="start.html" style="text-decoration: none;">Start a project</a><a href="index.html" style="text-decoration: none;">FAQ</a><a href="soon.html?p=Artwork+guidelines" style="text-decoration: none;">Artwork guidelines</a><a href="soon.html?p=Privacy+and+terms" style="text-decoration: none;">Privacy and terms</a>
+      </nav>
+      <div style="grid-column: span 3; display: flex; flex-direction: column; gap: 12px; font-size: 16px;">
+        <span style="font-weight: 600; color: #B8B4A4; font-size: 14px;">Visit the studio</span>
+        <span style="line-height: 1.5;">308 35th Street<br>Union City, NJ 07087</span>
+        <a href="mailto:info@printomo.co" style="text-decoration: none;">info@printomo.co</a>
+        <a href="tel:+13475869555" style="text-decoration: none;">+1 (347) 586-9555</a>
+        <a href="soon.html?p=Instagram" aria-label="Printomo on Instagram" style="width: 44px; height: 44px; display: flex; align-items: center; margin-left: -2px;">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#F4F6E8" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.3" cy="6.7" r="0.6" fill="#F4F6E8"></circle></svg>
+        </a>
+      </div>
+    </div>
+    <div style="margin-top: 56px; border-top: 1px solid #3A3A3B; padding-top: 20px; display: flex; justify-content: space-between; font-size: 14px; color: #B8B4A4;">
+      <span>© 2026 Printomo</span>
+      <span>Lights on in Union City, NJ</span>
+    </div>
+  </footer>
+
+</div>
+</x-dc>
+<script data-dc-script data-props='{"$preview":{"width":1440,"height":5360}}'>
+class Component extends DCLogic {
+  componentDidMount() {
+    this.timer = setInterval(() => {
+      const s = this.state || {};
+      if (s.picked) return;
+      this.setState({ part: ((s.part ?? 0) + 1) % 6 });
+    }, 3800);
+  }
+  componentWillUnmount() { clearInterval(this.timer); }
+  renderVals() {
+    const s = this.state || {};
+    const part = s.part ?? 0;
+    const defs = [
+      { key: 'fascia', short: 'Fascia sign', eyebrow: 'OVER THE DOOR', name: 'The fascia sign', x: 600, y: 200,
+        body: 'The name over the door, and the first thing anyone reads from across the street. It sets the tone for everything else on the front.',
+        made: 'Printed panel, lightbox, or dimensional letters', seen: 'Across the street', permit: 'Usually needed' },
+      { key: 'blade', short: 'Blade sign', eyebrow: 'OFF THE WALL', name: 'The blade sign', x: 116, y: 228,
+        body: 'Double-sided and sticking out from the wall, it catches people walking down the block who would never see a flat sign.',
+        made: 'Printed or routed panel, lit or unlit, custom shapes', seen: 'Down the block', permit: 'Usually needed' },
+      { key: 'awning', short: 'Awning', eyebrow: 'OVERHEAD', name: 'The awning', x: 632, y: 316,
+        body: 'Shade, shelter, and a second place for your name. A new cover on an existing frame is often all it takes.',
+        made: 'Printed or lettered awning fabric, new or recovered', seen: 'Across the street', permit: 'Often needed' },
+      { key: 'window', short: 'Window graphics', eyebrow: 'ON THE GLASS', name: 'Window graphics', x: 176, y: 384,
+        body: 'The cheapest square footage on the building. Lettering, logos, privacy bands, or a full wrap you can still see out of.',
+        made: 'Cut vinyl, perforated film, frosting, full wraps', seen: 'The sidewalk', permit: 'Rarely needed' },
+      { key: 'door', short: 'Door and hours', eyebrow: 'AT ARM’S LENGTH', name: 'Door and hours', x: 434, y: 374,
+        body: 'Hours, address numbers, push and pull, and the details that tell a customer they are in the right place.',
+        made: 'Cut vinyl, small plaques, address numbers', seen: 'Arm’s length', permit: 'Not needed' },
+      { key: 'aframe', short: 'Sidewalk sign', eyebrow: 'ON THE PAVEMENT', name: 'The sidewalk sign', x: 762, y: 428,
+        body: 'Today’s special, an arrow, or a reason to stop. Built to be wheeled in at night and swapped out often.',
+        made: 'A-frame with swappable printed inserts', seen: 'Right in front of it', permit: 'Check your town' }
+    ];
+    const parts = defs.map((d, i) => ({
+      num: String(i + 1).padStart(2, '0'), short: d.short, eyebrow: d.eyebrow, name: d.name, body: d.body,
+      made: d.made, seen: d.seen, permit: d.permit,
+      label: 'Show ' + d.short,
+      pos: 'left: ' + d.x + 'px; top: ' + d.y + 'px;',
+      show: i === part,
+      pressed: i === part ? 'true' : 'false',
+      hotCls: 'sg-hot' + (i === part ? ' is-on' : ''),
+      tabCls: 'sg-tab' + (i === part ? ' is-on' : ''),
+      pick: () => this.setState({ part: i, picked: true })
+    }));
+    const partCls = {};
+    defs.forEach((d, i) => { partCls[d.key] = 'sg-part' + (i === part ? ' is-on' : ''); });
+
+    const cats = [
+      { name: 'Storefront and fascia signs', body: 'Panels, lightboxes, and dimensional letters for the name over the door.' },
+      { name: 'Blade and projecting signs', body: 'Double-sided signs that catch people walking down the block.' },
+      { name: 'Window and door graphics', body: 'Cut vinyl, perforated film, frosting, and full-window wraps.' },
+      { name: 'Wall graphics and murals', body: 'Printed wallcoverings, lobby walls, and large-format murals.' },
+      { name: 'Wayfinding', body: 'Room IDs, directories, and directional signs that move people through a space.' },
+      { name: 'Banners and large format', body: 'Vinyl and mesh banners, fence wraps, flags, and building banners.' },
+      { name: 'Opening and event signage', body: 'Grand-opening banners, pop-up signs, and signs for one weekend only.' },
+      { name: 'Displays and menu boards', body: 'Point-of-sale displays, menu boards, and counter signs.' }
+    ].map((c, i) => ({ num: String(i + 1).padStart(2, '0'), name: c.name, body: c.body }));
+
+    const steps = [
+      { name: 'Site survey', body: 'We come out, measure, photograph the front, and check the wall, the power, and what is already up there.' },
+      { name: 'Design and proof', body: 'You see the sign to scale, mocked up on a photo of your actual building, before anything is made.' },
+      { name: 'Approvals', body: 'Landlord sign-off and permits where the town needs them. [Confirm who files.]' },
+      { name: 'Fabrication', body: 'Made in our shop or by a vendor we manage. Either way, we check it before it leaves.' },
+      { name: 'Install', body: 'Our crew hangs it, before you open or after you close, and leaves the sidewalk clean.' }
+    ].map((st, i) => ({ num: String(i + 1).padStart(2, '0'), name: st.name, body: st.body }));
+
+    const jobs = [
+      { no: 'JOB 04', client: '[Client]', piece: 'Storefront sign and install', photo: '[Photo of a finished storefront install]' },
+      { no: 'JOB 07', client: '[Client]', piece: 'Wayfinding program', photo: '[Photo of the wayfinding signs in place]' },
+      { no: 'JOB [00]', client: '[Client]', piece: 'Window graphics', photo: '[Photo of window graphics from the sidewalk]' }
+    ];
+
+    const faqData = [
+      { q: 'Do you install, or just make the sign?', a: 'Both. Our own crew installs what we make. [Add the area you cover, for example NYC and North Jersey.]' },
+      { q: 'Who handles permits and landlord approval?', a: '[Say whether Printomo files permits, works with an expediter, or hands the client stamped drawings.] Either way, you will know up front if your sign needs one.' },
+      { q: 'Can you install outside business hours?', a: '[Confirm.] Most storefront installs can happen before you open or after you close, so you do not lose a day of business.' },
+      { q: 'Can you take down our old sign?', a: '[Confirm removal and disposal.] If the wall needs patching or painting after, we will say so in the quote.' },
+      { q: 'What do you need from us to quote?', a: 'A few photos of the space, rough dimensions, your logo files, and a date. No measurements? We will come out and take them.' },
+      { q: 'How long does it take?', a: '[Typical lead times for vinyl, panels, and lit signs, plus how permits change the timeline.]' }
+    ];
+    const openIdx = s.faq ?? 0;
+    const faqs = faqData.map((f, i) => ({
+      q: f.q, a: f.a,
+      open: i === openIdx,
+      expanded: i === openIdx ? 'true' : 'false',
+      cls: 'nb-q' + (i === openIdx ? ' is-open' : ''),
+      toggle: () => this.setState({ faq: ((this.state && this.state.faq) ?? 0) === i ? -1 : i })
+    }));
+
+    const words = ['DESIGN', 'CREATE', 'PRODUCE', 'DELIVER'];
+    const tapeA = [];
+    for (let k = 0; k < 8; k++) { tapeA.push(...words); }
+
+    return { parts: parts, partCls: partCls, cats: cats, steps: steps, jobs: jobs, faqs: faqs, tapeA: tapeA };
+  }
+}
+</script>
+</body>
+</html>

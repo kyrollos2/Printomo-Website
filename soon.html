@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>On the way — Printomo</title>
+  <meta name="description" content="This part of the new Printomo site is still being built.">
+  <meta name="robots" content="noindex">
+  <link rel="icon" href="assets/mark_rust.svg" type="image/svg+xml">
+  <style>
+    @font-face { font-family: 'Archivo'; src: url('assets/archivo.woff2') format('woff2-variations'); font-weight: 100 900; font-display: swap; }
+    @font-face { font-family: 'Big Shoulders Display'; src: url('assets/bigshoulders.woff2') format('woff2-variations'); font-weight: 100 900; font-display: swap; }
+    :root { --cream: #F8F4DF; --black: #000000; --rust: #A84F38; --amber: #F2C46D; --text: #F4F6E8; --muted: #B8B4A4; --line: #3A3A3B; }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; min-height: 100%; background: var(--black); color: var(--text); font-family: 'Archivo', 'Helvetica Neue', Helvetica, sans-serif; -webkit-font-smoothing: antialiased; }
+    a { color: inherit; }
+    a:focus-visible { outline: 2px solid var(--amber); outline-offset: 3px; }
+    .wrap { min-height: 100vh; display: flex; flex-direction: column; padding: 0 64px; max-width: 1440px; margin: 0 auto; }
+    header { height: 88px; display: flex; align-items: center; justify-content: space-between; }
+    header img { width: 50px; height: 53px; display: block; }
+    .back { font-size: 15px; font-weight: 600; text-underline-offset: 5px; }
+    .back:hover { color: var(--amber); }
+    main { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 28px; padding: 60px 0 80px; }
+    .eyebrow { font-size: 13px; font-weight: 700; letter-spacing: 0.14em; color: var(--amber); }
+    h1 { margin: 0; font-family: 'Big Shoulders Display', 'Arial Narrow', sans-serif; font-weight: 900; font-size: clamp(72px, 13vw, 190px); line-height: 0.86; letter-spacing: 0.01em; text-transform: uppercase;
+      background-color: var(--rust); background-image: url('assets/photo_building.jpg'); background-size: cover; background-position: 30% 40%; -webkit-background-clip: text; background-clip: text; color: transparent; overflow-wrap: anywhere; }
+    p { margin: 0; max-width: 560px; font-size: 20px; line-height: 1.55; color: #D6D2C2; }
+    .row { display: flex; flex-wrap: wrap; gap: 12px; padding-top: 6px; }
+    .btn { text-decoration: none; padding: 16px 24px; border-radius: 2px; font-weight: 600; font-size: 16px; transition: background-color 0.2s, color 0.2s; }
+    .btn-primary { background: var(--rust); color: var(--cream); }
+    .btn-primary:hover { background: #8E3F2C; }
+    .btn-ghost { border: 1px solid #6B6A64; color: var(--text); padding: 15px 23px; }
+    .btn-ghost:hover { background: var(--text); color: var(--black); }
+    footer { border-top: 1px solid var(--line); padding: 22px 0 28px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; font-size: 14px; color: var(--muted); }
+    footer a { text-decoration: none; } footer a:hover { color: var(--amber); }
+    @media (max-width: 640px) { .wrap { padding: 0 16px; } }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <a href="index.html" aria-label="Printomo home"><img src="assets/mark_rust.svg" alt="Printomo"></a>
+      <a class="back" href="javascript:history.back()" id="back">Go back</a>
+    </header>
+    <main>
+      <span class="eyebrow">STILL ON THE PRESS</span>
+      <h1 id="name">Coming soon</h1>
+      <p id="msg">This part of the new site is still being built. It's coming in the next round.</p>
+      <div class="row">
+        <a class="btn btn-primary" href="index.html">Back to the homepage</a>
+        <a class="btn btn-ghost" href="start.html">Start a project</a>
+      </div>
+    </main>
+    <footer>
+      <span>308 35th Street, Union City, NJ 07087</span>
+      <span><a href="mailto:info@printomo.co">info@printomo.co</a> · <a href="tel:+13475869555">+1 (347) 586-9555</a></span>
+    </footer>
+  </div>
+  <script>
+    (function () {
+      var p = new URLSearchParams(location.search).get('p');
+      var notes = {
+        'Journal': 'Stories from the shop floor, new work, and behind-the-scenes from big jobs.',
+        'Careers': 'Open roles across the studio, production, and install crews.',
+        'Artwork guidelines': 'File formats, color, and sizing, so your artwork is ready for the press the first time.',
+        'Privacy and terms': 'How Printomo handles the information you send through this site.',
+        'Instagram': 'The link to Printomo’s Instagram will be added before launch.',
+        'Online store': 'The link to Printomo’s online store for reorders will be added before launch.'
+      };
+      if (p) {
+        document.getElementById('name').textContent = p;
+        document.title = p + ' — Printomo';
+        var isLink = (p === 'Instagram' || p === 'Online store');
+        document.getElementById('msg').textContent = isLink ? notes[p] : (notes[p] ? notes[p] + ' ' : '') + 'This page is still being built and is coming in the next round.';
+      }
+      if (history.length <= 1) { document.getElementById('back').setAttribute('href', 'index.html'); document.getElementById('back').textContent = 'Home'; }
+    })();
+  </script>
+</body>
+</html>
